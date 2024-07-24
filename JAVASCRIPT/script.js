@@ -248,6 +248,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     animate();
 
+    function isMobileDevice() {
+        return window.innerWidth <= 768;
+    }
+
     function isPointInOverlay(x, y) {
         const overlay = document.getElementById('product-overlay');
         const rect = overlay.getBoundingClientRect();
@@ -266,12 +270,20 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('product-title').textContent = info.title;
             document.getElementById('product-price').textContent = info.price;
             document.getElementById('product-description').textContent = info.description;
-            document.getElementById('product-overlay').classList.add('visible');
+            const overlay = document.getElementById('product-overlay');
+            overlay.classList.add('visible');
+            if (isMobileDevice()) {
+                overlay.style.height = '33.33%';
+            }
         }
     }
 
     function hideOverlay() {
-        document.getElementById('product-overlay').classList.remove('visible');
+        const overlay = document.getElementById('product-overlay');
+        overlay.classList.remove('visible');
+        if (isMobileDevice()) {
+            overlay.style.height = '33.33%';
+        }
     }
 
     function onClick(event) {
@@ -543,12 +555,58 @@ document.addEventListener('DOMContentLoaded', () => {
         alert(`Added ${title} (Size: ${size.toUpperCase()}) to cart!`);
     });
 
-    // Add event listener to close the overlay when clicking outside
-    document.getElementById('product-overlay').addEventListener('click', (event) => {
-        if (event.target === event.currentTarget) {
-            hideOverlay();
+    // Overlay drag functionality
+    function initOverlayDrag() {
+        if (!isMobileDevice()) return;
+
+        const overlay = document.getElementById('product-overlay');
+        let isDraggingOverlay = false;
+        let startY, startHeight;
+
+        function startDraggingOverlay(e) {
+            if (!overlay.classList.contains('visible')) return;
+            isDraggingOverlay = true;
+            startY = e.touches[0].clientY;
+            startHeight = overlay.offsetHeight;
+            document.body.style.overflow = 'hidden';
         }
-    });
+
+        function dragOverlay(e) {
+            if (!isDraggingOverlay) return;
+            e.preventDefault();
+            
+            const touchY = e.touches[0].clientY;
+            const deltaY = startY - touchY;
+            
+            let newHeight = startHeight + deltaY;
+            newHeight = Math.max(window.innerHeight * 0.3333, Math.min(newHeight, window.innerHeight * 0.8));
+            
+            overlay.style.height = `${newHeight}px`;
+        }
+
+        function stopDraggingOverlay() {
+            if (!isDraggingOverlay) return;
+            
+            isDraggingOverlay = false;
+            document.body.style.overflow = '';
+            
+            const threshold = window.innerHeight * 0.5;
+            
+            if (overlay.offsetHeight > threshold) {
+                overlay.style.height = '80%';
+            } else {
+                overlay.style.height = '33.33%';
+            }
+        }
+
+        overlay.addEventListener('touchstart', startDraggingOverlay, { passive: false });
+        overlay.addEventListener('touchmove', dragOverlay, { passive: false });
+        overlay.addEventListener('touchend', stopDraggingOverlay);
+        overlay.addEventListener('touchcancel', stopDraggingOverlay);
+    }
+
+    // Initialize overlay drag functionality
+    initOverlayDrag();
 
     // Initial setup
     resizeRenderer();
