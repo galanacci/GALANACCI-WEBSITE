@@ -142,9 +142,9 @@ document.addEventListener('DOMContentLoaded', () => {
             description: "Sleek leather vest for a edgy look."
         },
         '/3DM/GLN_LEATHER_JACKET_3.glb': {
-            title: "Leather Jacket 3",
-            price: "$169.99",
-            description: "Premium leather jacket with unique design."
+            title: "POG Denim Jacket",
+            price: "£1500.00",
+            description: "This is a 1 of 1 piece which was hand-embroidered by GALANACCI THE CREATOR. 'POG,' standing for 'Pioneers of Greatness,' is the brand's slogan and serves as an invitation for you to become a pioneer of greatness. This concept originates from the 'Greatness' poem."
         },
         '/3DM/GLN_LEATHER_JACKET_4.glb': {
             title: "Leather Jacket 4",
