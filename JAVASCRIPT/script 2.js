@@ -179,6 +179,53 @@ document.addEventListener('DOMContentLoaded', () => {
     const zoomSpeed = 0.005;
     let initialCameraDistance = 7;
 
+    // Function to show HUD overlay with product information
+    function showHUDOverlay(modelPath) {
+        if (isItemSelected) {
+            const info = productInfo[modelPath];
+            if (info) {
+                document.getElementById('product-title').textContent = info.title;
+                document.getElementById('product-price').textContent = info.price;
+                document.getElementById('product-description').textContent = info.description;
+                
+                const colorContainer = document.getElementById('product-colors');
+                colorContainer.innerHTML = '';
+                info.colors.forEach(color => {
+                    const colorOption = document.createElement('div');
+                    colorOption.className = 'color-option';
+                    colorOption.style.backgroundColor = color;
+                    colorContainer.appendChild(colorOption);
+                });
+                
+                const imageSlider = document.getElementById('image-slider');
+                imageSlider.innerHTML = '';
+                info.images.forEach(imageSrc => {
+                    const img = document.createElement('img');
+                    img.src = imageSrc;
+                    img.alt = info.title;
+                    imageSlider.appendChild(img);
+                });
+                
+                document.getElementById('hud-overlay').classList.remove('hidden');
+            }
+        }
+    }
+
+    // Function to hide HUD overlay
+    function hideHUDOverlay() {
+        document.getElementById('hud-overlay').classList.add('hidden');
+    }
+
+    // Functions to show and hide full-size product images
+    function showFullImage(imageSrc) {
+        document.getElementById('full-image').src = imageSrc;
+        document.getElementById('full-image-container').classList.remove('hidden');
+    }
+
+    function hideFullImage() {
+        document.getElementById('full-image-container').classList.add('hidden');
+    }
+
     // Function to update model rotation with momentum
     function updateModelRotation() {
         if (selectedModel && selectedModel.userData.isSelected) {
@@ -193,6 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (Math.abs(rotationMomentum) > 0.0001) {
                 requestAnimationFrame(updateModelRotation);
+                document.getElementById('hud-overlay').classList.remove('hidden');
             }
         }
     }
@@ -276,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
             isTransitioning = true;
             isItemSelected = true;
             const modelPath = modelPaths[models.indexOf(clickedModel)];
-            showOverlay(modelPath);    
+            showHUDOverlay(modelPath);    
 
             const boundingBox = new THREE.Box3().setFromObject(clickedModel);
             const center = boundingBox.getCenter(new THREE.Vector3());
@@ -336,7 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .easing(TWEEN.Easing.Quadratic.Out)
                 .start();
 
-            hideOverlay();
+            hideHUDOverlay();
         }
     }
 
@@ -360,7 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Event listeners
+    // Event listener for mouse down
     window.addEventListener('mousedown', (event) => {
         if (selectedModel && selectedModel.userData.isSelected && !isTransitioning) {
             isDragging = true;
@@ -369,6 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Event listener for touch start
     window.addEventListener('touchstart', (event) => {
         if (selectedModel && selectedModel.userData.isSelected && !isTransitioning) {
             if (event.touches.length === 1) {
@@ -386,6 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, { passive: false });
 
+    // Event listener for mouse move
     window.addEventListener('mousemove', (event) => {
         if (isDragging && selectedModel && selectedModel.userData.isSelected) {
             const deltaMove = {
@@ -409,6 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Event listener for touch move
     window.addEventListener('touchmove', (event) => {
         if (selectedModel && selectedModel.userData.isSelected) {
             event.preventDefault();
@@ -450,10 +501,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, { passive: false });
 
+    // Event listener for mouse up
     window.addEventListener('mouseup', () => {
         isDragging = false;
     });
 
+    // Event listener for touch end
     window.addEventListener('touchend', () => {
         isDragging = false;
         initialPinchDistance = 0;
@@ -462,6 +515,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Event listener for mouse move (cursor style)
     window.addEventListener('mousemove', (event) => {
         const mouse = new THREE.Vector2(
             (event.clientX / window.innerWidth) * 2 - 1,
@@ -475,11 +529,73 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.cursor = intersects.length > 0 ? 'pointer' : 'auto';
     });
 
+    // Event listener for mouse wheel (zooming)
     window.addEventListener('wheel', (event) => {
         event.preventDefault();
         handleZoom(-event.deltaY * 0.0005);
     }, { passive: false });
 
+    // Event listeners for click and touch start
     window.addEventListener('mousedown', onClick);
     window.addEventListener('touchstart', onClick, { passive: false });
+});
+
+// Event listener for add to cart button
+document.getElementById('add-to-cart').addEventListener('click', () => {
+    const size = document.getElementById('size-select').value;
+    const title = document.getElementById('product-title').textContent;
+    alert(`Added ${title} (Size: ${size.toUpperCase()}) to cart!`);
+});
+
+// Event listener to close overlay when clicking outside
+document.addEventListener('click', (event) => {
+    const overlay = document.getElementById('product-overlay');
+    const wardrobeContainer = document.getElementById('wardrobe-container');
+    
+    if (!overlay.contains(event.target) && !wardrobeContainer.contains(event.target)) {
+        hideOverlay();
+    }
+});
+
+// Event listeners for size buttons
+document.querySelectorAll('.size-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+    });
+});
+
+// Event listener for add to cart button (with size selection)
+document.getElementById('add-to-cart').addEventListener('click', function() {
+    const selectedSize = document.querySelector('.size-btn.selected');
+    if (selectedSize) {
+        alert(`Added to cart: ${document.getElementById('product-title').textContent} - Size: ${selectedSize.dataset.size}`);
+    } else {
+        alert('Please select a size');
+    }
+});
+
+// Event listener for buy now button
+document.getElementById('buy-now').addEventListener('click', function() {
+    const selectedSize = document.querySelector('.size-btn.selected');
+    if (selectedSize) {
+        alert(`Proceeding to checkout: ${document.getElementById('product-title').textContent} - Size: ${selectedSize.dataset.size}`);
+    } else {
+        alert('Please select a size');
+    }
+});
+
+// Event listener to close overlay when clicking outside
+document.getElementById('product-overlay').addEventListener('click', (event) => {
+    if (event.target === event.currentTarget) {
+        hideOverlay();
+    }
+});
+
+// Event listeners for full image view
+document.getElementById('close-full-image').addEventListener('click', hideFullImage);
+document.getElementById('full-image-container').addEventListener('click', (event) => {
+    if (event.target === event.currentTarget) {
+        hideFullImage();
+    }
 });
