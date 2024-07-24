@@ -75,15 +75,14 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // 3D Wardrobe functionality
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Set up Three.js scene, camera, and renderer
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.getElementById('wardrobe-container').appendChild(renderer.domElement);
 
-    // Add lighting to the scene
     const ambientLight = new THREE.AmbientLight(0x404040, 8);
     scene.add(ambientLight);
 
@@ -98,7 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
     scene.add(spotLightTarget);
     spotLight.target = spotLightTarget;
 
-    // Load 3D models
     const loader = new THREE.GLTFLoader();
     const models = [];
 
@@ -122,19 +120,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const defaultScale = 4;
 
-    // Product information
     const productInfo = {
         '/3DM/GLN_DENIM_JACKET.glb': {
-            title: "Product 1",
-            price: "$1500.00",
-            description: "Classic denim jacket with a modern twist.",
-            colors: ['#0000FF', '#000000', '#FFFFFF'],
-            images: ['/images/product1_1.jpg', '/images/product1_2.jpg', '/images/product1_3.jpg']
+            title: "Denim Jacket",
+            price: "$79.99",
+            description: "Classic denim jacket with a modern twist."
         },
-        // ... (other product info)
+        '/3DM/GLN_LEATHER_JACKET.glb': {
+            title: "Leather Jacket",
+            price: "$149.99",
+            description: "Stylish leather jacket for a bold look."
+        },
+        '/3DM/GLN_LEATHER_JACKET_2.glb': {
+            title: "Leather Jacket 2",
+            price: "$159.99",
+            description: "Another stylish leather jacket variant."
+        },
+        '/3DM/GLN_LEATHER_VEST.glb': {
+            title: "Leather Vest",
+            price: "$89.99",
+            description: "Sleek leather vest for a edgy look."
+        },
+        '/3DM/GLN_LEATHER_JACKET_3.glb': {
+            title: "Leather Jacket 3",
+            price: "$169.99",
+            description: "Premium leather jacket with unique design."
+        },
+        '/3DM/GLN_LEATHER_JACKET_4.glb': {
+            title: "Leather Jacket 4",
+            price: "$179.99",
+            description: "Exclusive leather jacket with special features."
+        }
     };
 
-    // Load models and add them to the scene
     modelPaths.forEach((path, index) => {
         loader.load(path, (gltf) => {
             const model = gltf.scene;
@@ -151,35 +169,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
     camera.position.set(0, -2, 7);
 
-    // Function to adjust camera and models based on screen aspect ratio
     function adjustCameraAndModels() {
         const aspect = window.innerWidth / window.innerHeight;
-        camera.fov = aspect < 1 ? 100 : 75;
-        models.forEach(model => {
-            const scale = model.userData.defaultScale * (aspect < 1 ? 0.75 : 1);
-            model.scale.set(scale, scale, scale);
-        });
+
+        if (aspect < 1) {
+            camera.fov = 100;
+            models.forEach(model => {
+                const scale = model.userData.defaultScale * 0.75;
+                model.scale.set(scale, scale, scale);
+            });
+        } else {
+            camera.fov = 75;
+            models.forEach(model => {
+                const scale = model.userData.defaultScale;
+                model.scale.set(scale, scale, scale);
+            });
+        }
+
         camera.updateProjectionMatrix();
     }
 
-    // Variables for interaction and animation
-    let isItemSelected = false;
     let selectedModel = null;
     let isDragging = false;
-    let previousMousePosition = { x: 0, y: 0 };
+    let previousMousePosition = {
+        x: 0,
+        y: 0
+    };
     let isTransitioning = false;
+
     let touchStartX, touchStartY;
     let rotationSpeed = 0.005;
     let rotationMomentum = 0;
     let lastTouchTime = 0;
     const maxRotationSpeed = 0.1;
+
     let currentZoom = 1;
     const maxZoom = 1.3;
     const minZoom = 1;
     const zoomSpeed = 0.005;
     let initialCameraDistance = 7;
 
-    // Function to update model rotation with momentum
     function updateModelRotation() {
         if (selectedModel && selectedModel.userData.isSelected) {
             rotationMomentum = Math.max(Math.min(rotationMomentum, maxRotationSpeed), -maxRotationSpeed);
@@ -197,7 +226,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Main animation loop
     function animate() {
         requestAnimationFrame(animate);
         models.forEach(model => {
@@ -220,40 +248,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     animate();
 
-    // Function to show product overlay
+    function isPointInOverlay(x, y) {
+        const overlay = document.getElementById('product-overlay');
+        const rect = overlay.getBoundingClientRect();
+        return (
+            x >= rect.left &&
+            x <= rect.right &&
+            y >= rect.top &&
+            y <= rect.bottom &&
+            overlay.classList.contains('visible')
+        );
+    }
+
     function showOverlay(modelPath) {
         const info = productInfo[modelPath];
         if (info) {
             document.getElementById('product-title').textContent = info.title;
             document.getElementById('product-price').textContent = info.price;
             document.getElementById('product-description').textContent = info.description;
-            
-            const colorContainer = document.getElementById('product-colors');
-            colorContainer.innerHTML = '';
-            info.colors.forEach(color => {
-                const colorOption = document.createElement('div');
-                colorOption.className = 'color-option';
-                colorOption.style.backgroundColor = color;
-                colorContainer.appendChild(colorOption);
-            });
-            
-            document.getElementById('product-sizes').value = '';
             document.getElementById('product-overlay').classList.add('visible');
         }
     }
 
-    // Function to hide product overlay
     function hideOverlay() {
         document.getElementById('product-overlay').classList.remove('visible');
     }
 
-    // Function to handle click/touch events on 3D models
     function onClick(event) {
         event.preventDefault();
+
         if (isTransitioning) return;
 
         const clientX = event.clientX || (event.touches && event.touches[0].clientX);
         const clientY = event.clientY || (event.touches && event.touches[0].clientY);
+
+        if (isPointInOverlay(clientX, clientY)) return;
 
         const mouse = new THREE.Vector2(
             (clientX / window.innerWidth) * 2 - 1,
@@ -274,9 +303,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             selectedModel = clickedModel;
             isTransitioning = true;
-            isItemSelected = true;
-            const modelPath = modelPaths[models.indexOf(clickedModel)];
-            showOverlay(modelPath);    
 
             const boundingBox = new THREE.Box3().setFromObject(clickedModel);
             const center = boundingBox.getCenter(new THREE.Vector3());
@@ -311,9 +337,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 .easing(TWEEN.Easing.Quadratic.Out)
                 .start();
 
+            const modelPath = modelPaths[models.indexOf(clickedModel)];
+            showOverlay(modelPath);
+
         } else if (selectedModel) {
             isTransitioning = true;
-            isItemSelected = false;
             new TWEEN.Tween(camera.position)
                 .to({ x: 0, y: -2, z: 7 }, 1000)
                 .easing(TWEEN.Easing.Quadratic.Out)
@@ -340,7 +368,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Function to handle zooming
     function handleZoom(delta) {
         if (selectedModel && selectedModel.userData.isSelected) {
             currentZoom += delta;
@@ -360,8 +387,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Event listeners
     window.addEventListener('mousedown', (event) => {
+        if (isPointInOverlay(event.clientX, event.clientY)) return;
         if (selectedModel && selectedModel.userData.isSelected && !isTransitioning) {
             isDragging = true;
             previousMousePosition.x = event.clientX;
@@ -370,6 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.addEventListener('touchstart', (event) => {
+        if (isPointInOverlay(event.touches[0].clientX, event.touches[0].clientY)) return;
         if (selectedModel && selectedModel.userData.isSelected && !isTransitioning) {
             if (event.touches.length === 1) {
                 isDragging = true;
@@ -387,6 +415,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: false });
 
     window.addEventListener('mousemove', (event) => {
+        if (isPointInOverlay(event.clientX, event.clientY)) {
+            document.body.style.cursor = 'auto';
+            return;
+        }
+
         if (isDragging && selectedModel && selectedModel.userData.isSelected) {
             const deltaMove = {
                 x: event.clientX - previousMousePosition.x,
@@ -399,6 +432,7 @@ document.addEventListener('DOMContentLoaded', () => {
             rotation = Math.max(Math.min(rotation, maxRotationSpeed), -maxRotationSpeed);
 
             selectedModel.rotation.y += rotation;
+
             selectedModel.rotation.y = selectedModel.rotation.y % (2 * Math.PI);
             if (selectedModel.rotation.y < 0) {
                 selectedModel.rotation.y += 2 * Math.PI;
@@ -407,14 +441,31 @@ document.addEventListener('DOMContentLoaded', () => {
             previousMousePosition.x = event.clientX;
             previousMousePosition.y = event.clientY;
         }
+
+        const mouse = new THREE.Vector2(
+            (event.clientX / window.innerWidth) * 2 - 1,
+            -(event.clientY / window.innerHeight) * 2 + 1
+        );
+
+        const raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera(mouse, camera);
+
+        const intersects = raycaster.intersectObjects(models, true);
+        if (intersects.length > 0) {
+            document.body.style.cursor = 'pointer';
+        } else {
+            document.body.style.cursor = 'auto';
+        }
     });
 
     window.addEventListener('touchmove', (event) => {
+        if (isPointInOverlay(event.touches[0].clientX, event.touches[0].clientY)) return;
         if (selectedModel && selectedModel.userData.isSelected) {
             event.preventDefault();
             if (event.touches.length === 1 && isDragging) {
                 const currentX = event.touches[0].clientX;
                 const deltaMove = currentX - touchStartX;
+
                 const currentTime = Date.now();
                 const timeDelta = Math.max(currentTime - lastTouchTime, 1);
 
@@ -424,6 +475,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 rotation = Math.max(Math.min(rotation, maxRotationSpeed), -maxRotationSpeed);
 
                 selectedModel.rotation.y += rotation;
+
                 selectedModel.rotation.y = selectedModel.rotation.y % (2 * Math.PI);
                 if (selectedModel.rotation.y < 0) {
                     selectedModel.rotation.y += 2 * Math.PI;
@@ -462,24 +514,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    window.addEventListener('mousemove', (event) => {
-        const mouse = new THREE.Vector2(
-            (event.clientX / window.innerWidth) * 2 - 1,
-            -(event.clientY / window.innerHeight) * 2 + 1
-        );
-
-        const raycaster = new THREE.Raycaster();
-        raycaster.setFromCamera(mouse, camera);
-
-        const intersects = raycaster.intersectObjects(models, true);
-        document.body.style.cursor = intersects.length > 0 ? 'pointer' : 'auto';
-    });
-
     window.addEventListener('wheel', (event) => {
+        if (isPointInOverlay(event.clientX, event.clientY)) return;
         event.preventDefault();
         handleZoom(-event.deltaY * 0.0005);
     }, { passive: false });
 
     window.addEventListener('mousedown', onClick);
     window.addEventListener('touchstart', onClick, { passive: false });
+
+    function resizeRenderer() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
+        
+        camera.updateProjectionMatrix();
+        adjustCameraAndModels();
+    }
+
+    window.addEventListener('resize', resizeRenderer);
+
+    // Add event listener for the "Add to Cart" button
+    document.getElementById('add-to-cart').addEventListener('click', () => {
+        const size = document.getElementById('size-select').value;
+        const title = document.getElementById('product-title').textContent;
+        alert(`Added ${title} (Size: ${size.toUpperCase()}) to cart!`);
+    });
+
+    // Add event listener to close the overlay when clicking outside
+    document.getElementById('product-overlay').addEventListener('click', (event) => {
+        if (event.target === event.currentTarget) {
+            hideOverlay();
+        }
+    });
+
+    // Initial setup
+    resizeRenderer();
 });
