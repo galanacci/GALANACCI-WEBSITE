@@ -1,21 +1,27 @@
+// Global variable to track cursor position
 let cursorX = 0;
 
+// Event listener to update cursor position on mouse move
 document.addEventListener('mousemove', (event) => {
     cursorX = event.clientX;
 });
 
+// Function to animate the split screen effect
 function animate() {
     const screenWidth = window.innerWidth;
     const percentage = (cursorX / screenWidth) * 100;
 
+    // Get DOM elements
     const galanacci = document.getElementById('galanacci');
     const pog = document.getElementById('pog');
     const galanacciLogo = document.querySelector('#galanacci-logo img');
     const pogLogo = document.querySelector('#pog-logo img');
 
+    // Update clip paths based on cursor position
     galanacci.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0% 100%)`;
     pog.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
 
+    // Calculate and set logo opacities
     let galanacciOpacity = 1, pogOpacity = 0;
 
     if (percentage < 20) {
@@ -32,17 +38,21 @@ function animate() {
     galanacciLogo.style.opacity = galanacciOpacity;
     pogLogo.style.opacity = pogOpacity;
 
+    // Continue animation
     requestAnimationFrame(animate);
 }
 
+// Start the animation
 requestAnimationFrame(animate);
 
+// Image modal functionality
 document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('imageModal');
     const modalImg = document.getElementById('img01');
     const images = document.querySelectorAll('.product-image');
     let currentImageIndex = 0;
 
+    // Open modal on image click
     images.forEach((image, index) => {
         image.onclick = function() {
             modal.style.display = 'block';
@@ -51,8 +61,10 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     });
 
+    // Close modal
     document.getElementsByClassName('close-modal')[0].onclick = () => modal.style.display = 'none';
 
+    // Navigate between images in modal
     function showImage(n) {
         currentImageIndex = (currentImageIndex + n + images.length) % images.length;
         modalImg.src = images[currentImageIndex].src;
@@ -62,13 +74,16 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('.next').onclick = () => showImage(1);
 });
 
+// 3D Wardrobe functionality
 document.addEventListener('DOMContentLoaded', () => {
+    // Set up Three.js scene, camera, and renderer
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.getElementById('wardrobe-container').appendChild(renderer.domElement);
 
+    // Add lighting to the scene
     const ambientLight = new THREE.AmbientLight(0x404040, 8);
     scene.add(ambientLight);
 
@@ -83,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
     scene.add(spotLightTarget);
     spotLight.target = spotLightTarget;
 
+    // Load 3D models
     const loader = new THREE.GLTFLoader();
     const models = [];
 
@@ -106,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const defaultScale = 4;
 
+    // Product information
     const productInfo = {
         '/3DM/GLN_DENIM_JACKET.glb': {
             title: "Product 1",
@@ -117,6 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // ... (other product info)
     };
 
+    // Load models and add them to the scene
     modelPaths.forEach((path, index) => {
         loader.load(path, (gltf) => {
             const model = gltf.scene;
@@ -133,6 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     camera.position.set(0, -2, 7);
 
+    // Function to adjust camera and models based on screen aspect ratio
     function adjustCameraAndModels() {
         const aspect = window.innerWidth / window.innerHeight;
         camera.fov = aspect < 1 ? 100 : 75;
@@ -143,6 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
         camera.updateProjectionMatrix();
     }
 
+    // Variables for interaction and animation
     let isItemSelected = false;
     let selectedModel = null;
     let isDragging = false;
@@ -159,6 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const zoomSpeed = 0.005;
     let initialCameraDistance = 7;
 
+    // Function to show HUD overlay with product information
     function showHUDOverlay(modelPath) {
         if (isItemSelected) {
             const info = productInfo[modelPath];
@@ -190,10 +211,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Function to hide HUD overlay
     function hideHUDOverlay() {
         document.getElementById('hud-overlay').classList.add('hidden');
     }
 
+    // Functions to show and hide full-size product images
     function showFullImage(imageSrc) {
         document.getElementById('full-image').src = imageSrc;
         document.getElementById('full-image-container').classList.remove('hidden');
@@ -203,6 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('full-image-container').classList.add('hidden');
     }
 
+    // Function to update model rotation with momentum
     function updateModelRotation() {
         if (selectedModel && selectedModel.userData.isSelected) {
             rotationMomentum = Math.max(Math.min(rotationMomentum, maxRotationSpeed), -maxRotationSpeed);
@@ -221,6 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Main animation loop
     function animate() {
         requestAnimationFrame(animate);
         models.forEach(model => {
@@ -243,6 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     animate();
 
+    // Function to show product overlay
     function showOverlay(modelPath) {
         const info = productInfo[modelPath];
         if (info) {
@@ -264,10 +290,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Function to hide product overlay
     function hideOverlay() {
         document.getElementById('product-overlay').classList.remove('visible');
     }
 
+    // Function to handle click/touch events on 3D models
     function onClick(event) {
         event.preventDefault();
         if (isTransitioning) return;
@@ -360,6 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Function to handle zooming
     function handleZoom(delta) {
         if (selectedModel && selectedModel.userData.isSelected) {
             currentZoom += delta;
@@ -379,6 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Event listener for mouse down
     window.addEventListener('mousedown', (event) => {
         if (selectedModel && selectedModel.userData.isSelected && !isTransitioning) {
             isDragging = true;
@@ -387,6 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Event listener for touch start
     window.addEventListener('touchstart', (event) => {
         if (selectedModel && selectedModel.userData.isSelected && !isTransitioning) {
             if (event.touches.length === 1) {
@@ -404,6 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, { passive: false });
 
+    // Event listener for mouse move
     window.addEventListener('mousemove', (event) => {
         if (isDragging && selectedModel && selectedModel.userData.isSelected) {
             const deltaMove = {
@@ -427,6 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Event listener for touch move
     window.addEventListener('touchmove', (event) => {
         if (selectedModel && selectedModel.userData.isSelected) {
             event.preventDefault();
@@ -468,10 +501,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, { passive: false });
 
+    // Event listener for mouse up
     window.addEventListener('mouseup', () => {
         isDragging = false;
     });
 
+    // Event listener for touch end
     window.addEventListener('touchend', () => {
         isDragging = false;
         initialPinchDistance = 0;
@@ -480,6 +515,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Event listener for mouse move (cursor style)
     window.addEventListener('mousemove', (event) => {
         const mouse = new THREE.Vector2(
             (event.clientX / window.innerWidth) * 2 - 1,
@@ -493,22 +529,25 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.cursor = intersects.length > 0 ? 'pointer' : 'auto';
     });
 
+    // Event listener for mouse wheel (zooming)
     window.addEventListener('wheel', (event) => {
         event.preventDefault();
         handleZoom(-event.deltaY * 0.0005);
     }, { passive: false });
 
+    // Event listeners for click and touch start
     window.addEventListener('mousedown', onClick);
     window.addEventListener('touchstart', onClick, { passive: false });
 });
 
-// Event listeners outside of DOMContentLoaded
+// Event listener for add to cart button
 document.getElementById('add-to-cart').addEventListener('click', () => {
     const size = document.getElementById('size-select').value;
     const title = document.getElementById('product-title').textContent;
     alert(`Added ${title} (Size: ${size.toUpperCase()}) to cart!`);
 });
 
+// Event listener to close overlay when clicking outside
 document.addEventListener('click', (event) => {
     const overlay = document.getElementById('product-overlay');
     const wardrobeContainer = document.getElementById('wardrobe-container');
@@ -518,6 +557,7 @@ document.addEventListener('click', (event) => {
     }
 });
 
+// Event listeners for size buttons
 document.querySelectorAll('.size-btn').forEach(btn => {
     btn.addEventListener('click', function() {
         document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
@@ -525,6 +565,7 @@ document.querySelectorAll('.size-btn').forEach(btn => {
     });
 });
 
+// Event listener for add to cart button (with size selection)
 document.getElementById('add-to-cart').addEventListener('click', function() {
     const selectedSize = document.querySelector('.size-btn.selected');
     if (selectedSize) {
@@ -534,6 +575,7 @@ document.getElementById('add-to-cart').addEventListener('click', function() {
     }
 });
 
+// Event listener for buy now button
 document.getElementById('buy-now').addEventListener('click', function() {
     const selectedSize = document.querySelector('.size-btn.selected');
     if (selectedSize) {
@@ -543,12 +585,14 @@ document.getElementById('buy-now').addEventListener('click', function() {
     }
 });
 
+// Event listener to close overlay when clicking outside
 document.getElementById('product-overlay').addEventListener('click', (event) => {
     if (event.target === event.currentTarget) {
         hideOverlay();
     }
 });
 
+// Event listeners for full image view
 document.getElementById('close-full-image').addEventListener('click', hideFullImage);
 document.getElementById('full-image-container').addEventListener('click', (event) => {
     if (event.target === event.currentTarget) {
