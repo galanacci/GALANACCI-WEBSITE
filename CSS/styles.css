@@ -220,9 +220,14 @@ nav .logo-container img {
   }
   
   .product-info {
-    display: flex;
-    flex-direction: column;
-  }
+    padding-top: 0; /* Reset padding for desktop */
+}
+
+@media (max-width: 768px) {
+    .product-info {
+        padding-top: 60px; /* Add padding for mobile to accommodate drag handle */
+    }
+}
   
   #product-title {
     font-size: 24px;
@@ -332,44 +337,61 @@ nav .logo-container img {
 
 /*Drag Handle For Overlay */
 
+/*Drag Handle For Overlay */
+
 .drag-handle {
     display: flex;
-    align-items: center;  /* Center-align items vertically */
-    justify-content: center;  /* Center-align items horizontally */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     margin: 10px auto;
     cursor: pointer;
-    opacity: 0;  /* Start with full transparency */
-    transition: opacity 0.3s ease-in-out;  /* Smooth fade-in/out transition */
-    height: 40px;  /* Set a fixed height if needed */
-}
-
-.drag-handle .arrow {
-    width: 0;
-    height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 10px solid #888;  /* Arrow outline color */
-    margin-right: 8px;  /* Space between arrow and text */
-    margin-top: 5px;  /* Align with the text vertically if needed */
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+    height: 40px;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1001;
 }
 
 .drag-handle .text {
-    color: rgba(136, 136, 136, 0.7);  /* Transparent color for the text */
-    font-size: 14px;
+    color: white;
+    font-size: 13px;
     font-family: Arial, sans-serif;
-    white-space: nowrap;  /* Prevent text from wrapping */
-    margin-left: 5px;  /* Adjust to balance the visual alignment */
+    margin-bottom: 10px;
 }
 
-.drag-handle.visible {
-    opacity: 1;  /* Fully visible when the handle is shown */
+.drag-handle .arrow-outline {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    transition: transform 0.3s ease-in-out;
 }
 
-/* Media query for mobile devices */
+.drag-handle .arrow-outline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 14px;
+    height: 14px;
+    border-top: 2px solid white;
+    border-right: 2px solid white;
+    transform: translateX(-50%) rotate(-45deg);
+}
+
+.drag-handle.down .arrow-outline {
+    transform: rotate(180deg);
+}
+
+.product-info {
+    padding-top: 60px; /* Adjust this value to create the desired gap */
+}
+
 @media (max-width: 768px) {
     .drag-handle {
-        display: flex; /* Ensure the drag handle is visible on mobile */
-        align-items: center;
-        justify-content: center;
+        display: flex;
     }
 }

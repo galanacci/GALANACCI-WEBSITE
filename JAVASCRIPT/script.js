@@ -612,67 +612,73 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isMobileDevice()) return;
     
         const overlay = document.getElementById('product-overlay');
-        let startY, startHeight, lastY, lastTime, velocity;
+        const dragHandle = document.querySelector('.drag-handle');
+        const dragText = dragHandle.querySelector('.text');
+        let startY, startHeight, isDragging = false;
+    
+        function updateDragHandleState(isUp) {
+            if (isUp) {
+                dragText.textContent = 'Swipe Down';
+                dragHandle.classList.add('down');
+            } else {
+                dragText.textContent = 'Swipe Up';
+                dragHandle.classList.remove('down');
+            }
+        }
     
         function startDragging(e) {
             if (!overlay.classList.contains('visible')) return;
+            isDragging = true;
             startY = e.touches[0].clientY;
             startHeight = overlay.offsetHeight;
-            lastY = startY;
-            lastTime = Date.now();
-            velocity = 0;
-            document.body.style.overflow = 'hidden';
             overlay.style.transition = 'none';
         }
     
         function drag(e) {
-            if (!startY) return;
+            if (!isDragging) return;
             e.preventDefault();
             
             const currentY = e.touches[0].clientY;
             const deltaY = startY - currentY;
-            const currentTime = Date.now();
-            
-            velocity = (lastY - currentY) / (currentTime - lastTime);
-            
             let newHeight = startHeight + deltaY;
             newHeight = Math.max(window.innerHeight * 0.1, Math.min(newHeight, window.innerHeight * 0.9));
             
             overlay.style.height = `${newHeight}px`;
-            
-            lastY = currentY;
-            lastTime = currentTime;
         }
     
         function stopDragging() {
-            if (!startY) return;
-            
-            startY = null;
-            document.body.style.overflow = '';
+            if (!isDragging) return;
+            isDragging = false;
             overlay.style.transition = 'height 0.3s ease-out';
             
             const currentHeight = overlay.offsetHeight;
             const threshold = window.innerHeight * 0.5;
             
-            if (Math.abs(velocity) > 0.5 || currentHeight !== startHeight) {
-                if (velocity > 0 || currentHeight > threshold) {
-                    overlay.style.height = '90%';
-                } else {
-                    overlay.style.height = '10%';
-                }
+            if (currentHeight > threshold) {
+                overlay.style.height = '90%';
+                updateDragHandleState(true);
+            } else {
+                overlay.style.height = '10%';
+                updateDragHandleState(false);
             }
         }
     
-        overlay.addEventListener('touchstart', startDragging, { passive: false });
-        overlay.addEventListener('touchmove', drag, { passive: false });
-        overlay.addEventListener('touchend', stopDragging);
-        overlay.addEventListener('touchcancel', stopDragging);
+        dragHandle.addEventListener('touchstart', startDragging, { passive: false });
+        window.addEventListener('touchmove', drag, { passive: false });
+        window.addEventListener('touchend', stopDragging);
+        window.addEventListener('touchcancel', stopDragging);
+    
+        // Initial state
+        updateDragHandleState(false);
     }
+    
+    // Call this function when the DOM is loaded
+    document.addEventListener('DOMContentLoaded', initOverlayDrag);
 
     // Initialize overlay drag functionality
     initOverlayDrag();
 
     // Initial setup
     resizeRenderer()
-
+    
 });
