@@ -122,34 +122,64 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const productInfo = {
         '/3DM/GLN_DENIM_JACKET.glb': {
-            title: "Denim Jacket",
-            price: "$79.99",
-            description: "Classic denim jacket with a modern twist."
+            title: "POG Leather Jacket",
+            price: "£1,500.00",
+            description: "Classic denim jacket with a modern twist.",
+            images: [
+                "/images/denim_jacket_1.jpg",
+                "/images/denim_jacket_2.jpg",
+                "/images/denim_jacket_3.jpg"
+            ]
         },
         '/3DM/GLN_LEATHER_JACKET.glb': {
             title: "Leather Jacket",
-            price: "$149.99",
-            description: "Stylish leather jacket for a bold look."
+            price: "£1,500.00",
+            description: "Stylish leather jacket for a bold look.",
+            images: [
+                "/images/leather_jacket_1.jpg",
+                "/images/leather_jacket_2.jpg",
+                "/images/leather_jacket_3.jpg"
+            ]
         },
         '/3DM/GLN_LEATHER_JACKET_2.glb': {
-            title: "Leather Jacket 2",
-            price: "$159.99",
-            description: "Another stylish leather jacket variant."
+            title: "K2G Leather Vest",
+            price: "£1,500.00",
+            description: "Another stylish leather jacket variant.",
+            images: [
+                "/images/leather_jacket_2_1.jpg",
+                "/images/leather_jacket_2_2.jpg",
+                "/images/leather_jacket_2_3.jpg"
+            ]
         },
         '/3DM/GLN_LEATHER_VEST.glb': {
             title: "Leather Vest",
-            price: "$89.99",
-            description: "Sleek leather vest for a edgy look."
+            price: "£1,500.00",
+            description: "Sleek leather vest for a edgy look.",
+            images: [
+                "/images/leather_vest_1.jpg",
+                "/images/leather_vest_2.jpg",
+                "/images/leather_vest_3.jpg"
+            ]
         },
         '/3DM/GLN_LEATHER_JACKET_3.glb': {
-            title: "POG Denim Jacket",
-            price: "£1500.00",
-            description: "This is a 1 of 1 piece which was hand-embroidered by GALANACCI THE CREATOR. 'POG,' standing for 'Pioneers of Greatness,' is the brand's slogan and serves as an invitation for you to become a pioneer of greatness. This concept originates from the 'Greatness' poem."
+            title: "Leather Jacket 3",
+            price: "£1,500.00",
+            description: "This is a 1 of 1 piece which was hand-embroidered by GALANACCI THE CREATOR. 'POG,' standing for 'Pioneers of Greatness,' is the brand's slogan and serves as an invitation for you to become a pioneer of greatness. This concept originates from the 'Greatness' poem.",
+            images: [
+                "/IMAGES/GALANACCI_COLLECTION/PRODUCT_1/1.png",
+                "/IMAGES/GALANACCI_COLLECTION/PRODUCT_1/2.png",
+                "/IMAGES/GALANACCI_COLLECTION/PRODUCT_1/3.png"
+            ]
         },
         '/3DM/GLN_LEATHER_JACKET_4.glb': {
             title: "Leather Jacket 4",
-            price: "$179.99",
-            description: "Exclusive leather jacket with special features."
+            price: "£1,500.00",
+            description: "Exclusive leather jacket with special features.",
+            images: [
+                "/images/leather_jacket_4_1.jpg",
+                "/images/leather_jacket_4_2.jpg",
+                "/images/leather_jacket_4_3.jpg"
+            ]
         }
     };
 
@@ -270,19 +300,35 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('product-title').textContent = info.title;
             document.getElementById('product-price').textContent = info.price;
             document.getElementById('product-description').textContent = info.description;
-            const overlay = document.getElementById('product-overlay');
-            overlay.classList.add('visible');
+            
+            // Populate images
+            const imageContainer = document.querySelector('#image-overlay .image-container');
+            const mobileImageContainer = document.querySelector('#product-overlay .product-images');
+            imageContainer.innerHTML = '';
+            mobileImageContainer.innerHTML = '';
+            
+            info.images.forEach(src => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = info.title;
+                imageContainer.appendChild(img.cloneNode(true));
+                mobileImageContainer.appendChild(img);
+            });
+
+            document.getElementById('product-overlay').classList.add('visible');
+            document.getElementById('image-overlay').classList.add('visible');
+            
             if (isMobileDevice()) {
-                overlay.style.height = '33.33%';
+                document.getElementById('product-overlay').style.height = '33.33%';
             }
         }
     }
 
     function hideOverlay() {
-        const overlay = document.getElementById('product-overlay');
-        overlay.classList.remove('visible');
+        document.getElementById('product-overlay').classList.remove('visible');
+        document.getElementById('image-overlay').classList.remove('visible');
         if (isMobileDevice()) {
-            overlay.style.height = '33.33%';
+            document.getElementById('product-overlay').style.height = '33.33%';
         }
     }
 
@@ -431,7 +477,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.style.cursor = 'auto';
             return;
         }
-
         if (isDragging && selectedModel && selectedModel.userData.isSelected) {
             const deltaMove = {
                 x: event.clientX - previousMousePosition.x,
@@ -558,11 +603,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Overlay drag functionality
     function initOverlayDrag() {
         if (!isMobileDevice()) return;
-
+    
         const overlay = document.getElementById('product-overlay');
+        const dragHandle = overlay.querySelector('.drag-handle');
         let isDraggingOverlay = false;
         let startY, startHeight;
-
+    
         function startDraggingOverlay(e) {
             if (!overlay.classList.contains('visible')) return;
             isDraggingOverlay = true;
@@ -570,7 +616,7 @@ document.addEventListener('DOMContentLoaded', () => {
             startHeight = overlay.offsetHeight;
             document.body.style.overflow = 'hidden';
         }
-
+    
         function dragOverlay(e) {
             if (!isDraggingOverlay) return;
             e.preventDefault();
@@ -583,7 +629,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             overlay.style.height = `${newHeight}px`;
         }
-
+    
         function stopDraggingOverlay() {
             if (!isDraggingOverlay) return;
             
@@ -598,11 +644,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 overlay.style.height = '33.33%';
             }
         }
-
-        overlay.addEventListener('touchstart', startDraggingOverlay, { passive: false });
-        overlay.addEventListener('touchmove', dragOverlay, { passive: false });
-        overlay.addEventListener('touchend', stopDraggingOverlay);
-        overlay.addEventListener('touchcancel', stopDraggingOverlay);
+    
+        dragHandle.addEventListener('touchstart', startDraggingOverlay, { passive: false });
+        document.addEventListener('touchmove', dragOverlay, { passive: false });
+        document.addEventListener('touchend', stopDraggingOverlay);
+        document.addEventListener('touchcancel', stopDraggingOverlay);
     }
 
     // Initialize overlay drag functionality
