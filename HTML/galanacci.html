@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GALANACCI.</title>
     <link rel="stylesheet" href="/CSS/styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/23.1.2/tween.umd.js" integrity="sha512-tVgTGDCgmeSNyNQn+QS+htn5AvnZc3tnER7GFo3ylfohYZKlottjyG2ryA4z2c1HV2Q7+MM3aN2A9abItyPpuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
 <body>
@@ -19,35 +18,66 @@
     </nav>
 
     <div id="wardrobe-container"></div>
-    <div id="image-overlay">
-        <div class="image-container">
-            <!-- Images will be dynamically added here -->
-        </div>
-    </div>
+
     <div id="product-overlay">
-        <div class="drag-handle"></div>
+
+        <div class="drag-handle">
+            <div class="text">Swipe Up</div>
+            <div class="arrow-outline"></div>
+        </div>
+
         <div class="product-info">
-            <h2 id="product-title"></h2>
-            <p id="product-price"></p>
-            <p id="product-description"></p>
-            <div id="product-sizing">
-                <label for="size-select">Size:</label>
-                <select id="size-select">
+            <h2 id="product-title">Product Title</h2>
+            <p id="product-price">£1500</p>
+            
+            <div class="selection-container">
+                <div class="color-selection">
+                  <select id="color-select">
+                    <option value="heather-grey">COLOUR</option>
+                    <option value="black">ECRU</option>
+                    <option value="white">PEARL</option>
+                  </select>
+                </div>
+              
+                <div class="size-selection">
+                  <select id="size-select">
                     <option value="s">S</option>
                     <option value="m">M</option>
                     <option value="l">L</option>
                     <option value="xl">XL</option>
-                </select>
+                  </select>
+                </div>
+              </div>
+            
+            <div class="additional-links">
+              <a href="#" id="more-colors">MORE COLORS</a>
+              <a href="#" id="size-chart">SIZE CHART</a>
             </div>
-            <button id="add-to-cart">Add to Cart</button>
-        </div>
-        <div class="product-images">
-            <!-- Images will be dynamically added here for mobile view -->
-        </div>
+            
+            <button id="add-to-cart">ADD TO CART</button>
+            
+            <p id="product-description">The Essentials short sleeve tee is made in the core cotton jersey. The rib-knit crewneck fits relaxed in the body with dropped shoulders. Minimalist branding is seen in the rubberized Essentials Fear of God black bar on the center front.</p>
+            
+            <div class="expandable-sections">
+              <details>
+                <summary>DETAILS</summary>
+                <p>Additional product details go here.</p>
+              </details>
+              <details>
+                <summary>SHIPPING POLICY</summary>
+                <p>Shipping policy information goes here.</p>
+              </details>
+              <details>
+                <summary>SHARE</summary>
+                <p>Share options go here.</p>
+              </details>
+            </div>
+          </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/23.1.2/tween.umd.js" integrity="sha512-tVgTGDCgmeSNyNQn+QS+htn5AvnZc3tnER7GFo3ylfohYZKlottjyG2ryA4z2c1HV2Q7+MM3aN2A9abItyPpuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="/JAVASCRIPT/script.js"></script>
 </body>
 

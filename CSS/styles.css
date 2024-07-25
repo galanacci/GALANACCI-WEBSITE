@@ -23,27 +23,9 @@ nav {
     transition: opacity 0.3s; /* Smooth transition for hiding/showing */
 }
 
-nav .logo-container {
-    display: flex;
-    align-items: center;
-}
-
-nav .logo-container a {
-    display: flex;
-    align-items: center;
-}
-
 nav .logo-container img {
     height: 40px; /* Default height for desktop */
     transition: height 0.3s; /* Smooth transition for height change */
-}
-
-#dark-logo, #light-logo {
-    display: none;
-}
-
-#dark-logo {
-    display: block;
 }
 
 /* Responsive Styles */
@@ -190,138 +172,204 @@ nav .logo-container img {
 
 /* Product Description Overlay (Product Description) */
 
-#image-overlay {
+#product-overlay, #image-overlay {
     position: fixed;
     top: 0;
-    left: 0;
-    width: 33.33%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease-in-out;
-    z-index: 1000;
-    overflow-y: auto;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
-}
-
-#image-overlay::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, and Opera */
-}
-
-#image-overlay.visible {
-    transform: translateX(0);
-}
-
-.image-container img {
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-#product-overlay {
-    position: fixed;
-    bottom: 0;
     right: 0;
     width: 33.33%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.5); /* Background with 50% opacity */
+    backdrop-filter: blur(2px); /* Gaussian blur effect */
     color: white;
     transform: translateX(100%);
-    transition: transform 0.3s ease-in-out, height 0.3s ease-in-out;
+    transition: transform 5s ease-in-out, opacity 5s ease-in-out; /* Added opacity transition */
     z-index: 1000;
     overflow-y: auto;
+    box-sizing: border-box;
+    padding-top: 20px;
+    padding-bottom: 50px;
+    padding-left: 5%;  /* Adjust this value as needed */
+    padding-right: 5%; /* Adjust this value as needed */
+    opacity: 0; /* Initially hidden */
 }
-
-#product-overlay.visible {
+  
+  #image-overlay {
+    
+    left: 0;
+    width: 33.33%;
+    transform: translateX(-100%);
+  }
+  
+  #product-overlay.visible, #image-overlay.visible {
     transform: translateX(0);
+    opacity: 1; /* Fully visible */
+}
+  
+  @media (max-width: 768px) {
+    #product-overlay {
+      width: 100%;
+      height: 33.33%;
+      bottom: 0;
+      top: auto;
+      transform: translateY(100%);
+    }
+  
+    #product-overlay.visible {
+      transform: translateY(0);
+    }
+  }
+  
+  .product-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  #product-title {
+    font-size: 24px;
+    margin-bottom: 5px;
+  }
+  
+  #product-price {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .selection-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 15px;
+  }
+  
+  .color-selection, .size-selection {
+    width: 48%; /* Adjust as needed */
+  }
+  
+  #color-select, #size-select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+  }
+  
+  #selected-color {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  #color-select, #size-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position-x: 100%;
+    background-position-y: 50%;
+  }
+  
+  .additional-links {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    color: white;
+  }
+  
+  .additional-links a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 12px;
+  }
+  
+#add-to-cart {
+  width: 100%;
+  padding: 15px;
+  background-color: white;  /* Changed from #000 to transparent */
+  color: black;
+  border: 1px solid #fff;  /* Added white border */
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: background-color 0.3s, color 0.3s;  /* Added transition for hover effect */
 }
 
-.product-info {
-    padding: 20px;
+#add-to-cart:hover {
+  background-color: black;  /* White background on hover */
+  color: white;  /* Black text on hover */
 }
+  
+  #product-description {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+  
+  .expandable-sections details {
+    margin-bottom: 10px;
+  }
+  
+  .expandable-sections summary {
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .expandable-sections p {
+    padding-left: 20px;
+    font-size: 14px;
+  }
 
-.product-images {
-    display: none;
+  #product-overlay {
+    transition: height 0.3s ease-out;
+    overflow-y: auto;
 }
-
-/* Mobile Product Overlay */
 
 @media (max-width: 768px) {
     #product-overlay {
-        width: 100%;
-        height: 33.33%;
-        left: 0;
-        right: auto;
-        transform: translateY(100%);
-    }
-
-    #product-overlay.visible {
-        transform: translateY(0);
-    }
-
-    .product-images {
-        display: flex;
-        overflow-x: auto;
-        padding: 10px 0;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .product-images img {
-        width: 80%;
-        flex-shrink: 0;
-        margin-right: 10px;
+        height: 10%; /* Start with a minimal height */
+        min-height: 60px; /* Ensure there's always something visible */
     }
 }
+
+/*Drag Handle For Overlay */
 
 .drag-handle {
-    display: none;
-    width: 40px;
-    height: 5px;
-    background-color: #ffffff;
-    border-radius: 2.5px;
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
+    display: flex;
+    align-items: center;  /* Center-align items vertically */
+    justify-content: center;  /* Center-align items horizontally */
+    margin: 10px auto;
+    cursor: pointer;
+    opacity: 0;  /* Start with full transparency */
+    transition: opacity 0.3s ease-in-out;  /* Smooth fade-in/out transition */
+    height: 40px;  /* Set a fixed height if needed */
 }
 
+.drag-handle .arrow {
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #888;  /* Arrow outline color */
+    margin-right: 8px;  /* Space between arrow and text */
+    margin-top: 5px;  /* Align with the text vertically if needed */
+}
+
+.drag-handle .text {
+    color: rgba(136, 136, 136, 0.7);  /* Transparent color for the text */
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    white-space: nowrap;  /* Prevent text from wrapping */
+    margin-left: 5px;  /* Adjust to balance the visual alignment */
+}
+
+.drag-handle.visible {
+    opacity: 1;  /* Fully visible when the handle is shown */
+}
+
+/* Media query for mobile devices */
 @media (max-width: 768px) {
     .drag-handle {
-        display: block;
+        display: flex; /* Ensure the drag handle is visible on mobile */
+        align-items: center;
+        justify-content: center;
     }
-}
-
-#image-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 33.33%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease-in-out;
-    z-index: 1000;
-    overflow-y: auto;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
-}
-
-#image-overlay::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, and Opera */
-}
-
-#image-overlay.visible {
-    transform: translateX(0);
-}
-
-.image-container {
-    padding: 20px;
-}
-
-.image-container img {
-    width: 100%;
-    margin-bottom: 20px;
-    display: block;
 }

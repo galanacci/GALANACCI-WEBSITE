@@ -122,9 +122,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const productInfo = {
         '/3DM/GLN_DENIM_JACKET.glb': {
-            title: "POG Leather Jacket",
+            title: "Product Tite 1",
             price: "£1,500.00",
-            description: "Classic denim jacket with a modern twist.",
+            description: "Product description will be inserted here.",
             images: [
                 "/images/denim_jacket_1.jpg",
                 "/images/denim_jacket_2.jpg",
@@ -132,9 +132,9 @@ document.addEventListener('DOMContentLoaded', () => {
             ]
         },
         '/3DM/GLN_LEATHER_JACKET.glb': {
-            title: "Leather Jacket",
+            title: "Product Tite 2",
             price: "£1,500.00",
-            description: "Stylish leather jacket for a bold look.",
+            description: "Product description will be inserted here.",
             images: [
                 "/images/leather_jacket_1.jpg",
                 "/images/leather_jacket_2.jpg",
@@ -142,9 +142,9 @@ document.addEventListener('DOMContentLoaded', () => {
             ]
         },
         '/3DM/GLN_LEATHER_JACKET_2.glb': {
-            title: "K2G Leather Vest",
+            title: "Product Tite 3",
             price: "£1,500.00",
-            description: "Another stylish leather jacket variant.",
+            description: "Product description will be inserted here.",
             images: [
                 "/images/leather_jacket_2_1.jpg",
                 "/images/leather_jacket_2_2.jpg",
@@ -152,19 +152,14 @@ document.addEventListener('DOMContentLoaded', () => {
             ]
         },
         '/3DM/GLN_LEATHER_VEST.glb': {
-            title: "Leather Vest",
+            title: "Product Tite 4",
             price: "£1,500.00",
-            description: "Sleek leather vest for a edgy look.",
-            images: [
-                "/images/leather_vest_1.jpg",
-                "/images/leather_vest_2.jpg",
-                "/images/leather_vest_3.jpg"
-            ]
+            description: "Product description will be inserted here.",
         },
         '/3DM/GLN_LEATHER_JACKET_3.glb': {
-            title: "Leather Jacket 3",
+            title: "Product Tite 5",
             price: "£1,500.00",
-            description: "This is a 1 of 1 piece which was hand-embroidered by GALANACCI THE CREATOR. 'POG,' standing for 'Pioneers of Greatness,' is the brand's slogan and serves as an invitation for you to become a pioneer of greatness. This concept originates from the 'Greatness' poem.",
+            description: "Product description will be inserted here.",
             images: [
                 "/IMAGES/GALANACCI_COLLECTION/PRODUCT_1/1.png",
                 "/IMAGES/GALANACCI_COLLECTION/PRODUCT_1/2.png",
@@ -172,9 +167,9 @@ document.addEventListener('DOMContentLoaded', () => {
             ]
         },
         '/3DM/GLN_LEATHER_JACKET_4.glb': {
-            title: "Leather Jacket 4",
+            title: "Product Tite 6",
             price: "£1,500.00",
-            description: "Exclusive leather jacket with special features.",
+            description: "Product description will be inserted here.",
             images: [
                 "/images/leather_jacket_4_1.jpg",
                 "/images/leather_jacket_4_2.jpg",
@@ -184,7 +179,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     modelPaths.forEach((path, index) => {
+        console.log('Loading model:', path);
         loader.load(path, (gltf) => {
+            console.log('Model loaded:', path);
             const model = gltf.scene;
             model.position.set(...modelPositions[index]);
             model.scale.set(defaultScale, defaultScale, defaultScale);
@@ -295,8 +292,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showOverlay(modelPath) {
+        console.log('Showing overlay for:', modelPath);
         const info = productInfo[modelPath];
         if (info) {
+          try {
             document.getElementById('product-title').textContent = info.title;
             document.getElementById('product-price').textContent = info.price;
             document.getElementById('product-description').textContent = info.description;
@@ -304,35 +303,42 @@ document.addEventListener('DOMContentLoaded', () => {
             // Populate images
             const imageContainer = document.querySelector('#image-overlay .image-container');
             const mobileImageContainer = document.querySelector('#product-overlay .product-images');
-            imageContainer.innerHTML = '';
-            mobileImageContainer.innerHTML = '';
+            if (imageContainer) imageContainer.innerHTML = '';
+            if (mobileImageContainer) mobileImageContainer.innerHTML = '';
             
             info.images.forEach(src => {
-                const img = document.createElement('img');
-                img.src = src;
-                img.alt = info.title;
-                imageContainer.appendChild(img.cloneNode(true));
-                mobileImageContainer.appendChild(img);
+              const img = document.createElement('img');
+              img.src = src;
+              img.alt = info.title;
+              if (imageContainer) imageContainer.appendChild(img.cloneNode(true));
+              if (mobileImageContainer) mobileImageContainer.appendChild(img);
             });
-
+      
             document.getElementById('product-overlay').classList.add('visible');
             document.getElementById('image-overlay').classList.add('visible');
             
             if (isMobileDevice()) {
-                document.getElementById('product-overlay').style.height = '33.33%';
+              document.getElementById('product-overlay').style.height = '50%';
             }
+          } catch (error) {
+            console.error('Error showing overlay:', error);
+          }
+        } else {
+          console.error('No product info found for:', modelPath);
         }
-    }
+      }
 
-    function hideOverlay() {
+      function hideOverlay() {
+        console.log('Hiding overlay');
         document.getElementById('product-overlay').classList.remove('visible');
         document.getElementById('image-overlay').classList.remove('visible');
         if (isMobileDevice()) {
-            document.getElementById('product-overlay').style.height = '33.33%';
+          document.getElementById('product-overlay').style.height = '33.33%';
         }
-    }
+      }
 
     function onClick(event) {
+        console.log('Click event triggered');
         event.preventDefault();
 
         if (isTransitioning) return;
@@ -596,64 +602,77 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add event listener for the "Add to Cart" button
     document.getElementById('add-to-cart').addEventListener('click', () => {
         const size = document.getElementById('size-select').value;
+        const color = document.getElementById('color-select').value;
         const title = document.getElementById('product-title').textContent;
-        alert(`Added ${title} (Size: ${size.toUpperCase()}) to cart!`);
-    });
+        alert(`Added ${title} (Size: ${size.toUpperCase()}, Color: ${color}) to cart!`);
+      });
 
     // Overlay drag functionality
     function initOverlayDrag() {
         if (!isMobileDevice()) return;
     
         const overlay = document.getElementById('product-overlay');
-        const dragHandle = overlay.querySelector('.drag-handle');
-        let isDraggingOverlay = false;
-        let startY, startHeight;
+        let startY, startHeight, lastY, lastTime, velocity;
     
-        function startDraggingOverlay(e) {
+        function startDragging(e) {
             if (!overlay.classList.contains('visible')) return;
-            isDraggingOverlay = true;
             startY = e.touches[0].clientY;
             startHeight = overlay.offsetHeight;
+            lastY = startY;
+            lastTime = Date.now();
+            velocity = 0;
             document.body.style.overflow = 'hidden';
+            overlay.style.transition = 'none';
         }
     
-        function dragOverlay(e) {
-            if (!isDraggingOverlay) return;
+        function drag(e) {
+            if (!startY) return;
             e.preventDefault();
             
-            const touchY = e.touches[0].clientY;
-            const deltaY = startY - touchY;
+            const currentY = e.touches[0].clientY;
+            const deltaY = startY - currentY;
+            const currentTime = Date.now();
+            
+            velocity = (lastY - currentY) / (currentTime - lastTime);
             
             let newHeight = startHeight + deltaY;
-            newHeight = Math.max(window.innerHeight * 0.3333, Math.min(newHeight, window.innerHeight * 0.8));
+            newHeight = Math.max(window.innerHeight * 0.1, Math.min(newHeight, window.innerHeight * 0.9));
             
             overlay.style.height = `${newHeight}px`;
+            
+            lastY = currentY;
+            lastTime = currentTime;
         }
     
-        function stopDraggingOverlay() {
-            if (!isDraggingOverlay) return;
+        function stopDragging() {
+            if (!startY) return;
             
-            isDraggingOverlay = false;
+            startY = null;
             document.body.style.overflow = '';
+            overlay.style.transition = 'height 0.3s ease-out';
             
+            const currentHeight = overlay.offsetHeight;
             const threshold = window.innerHeight * 0.5;
             
-            if (overlay.offsetHeight > threshold) {
-                overlay.style.height = '80%';
-            } else {
-                overlay.style.height = '33.33%';
+            if (Math.abs(velocity) > 0.5 || currentHeight !== startHeight) {
+                if (velocity > 0 || currentHeight > threshold) {
+                    overlay.style.height = '90%';
+                } else {
+                    overlay.style.height = '10%';
+                }
             }
         }
     
-        dragHandle.addEventListener('touchstart', startDraggingOverlay, { passive: false });
-        document.addEventListener('touchmove', dragOverlay, { passive: false });
-        document.addEventListener('touchend', stopDraggingOverlay);
-        document.addEventListener('touchcancel', stopDraggingOverlay);
+        overlay.addEventListener('touchstart', startDragging, { passive: false });
+        overlay.addEventListener('touchmove', drag, { passive: false });
+        overlay.addEventListener('touchend', stopDragging);
+        overlay.addEventListener('touchcancel', stopDragging);
     }
 
     // Initialize overlay drag functionality
     initOverlayDrag();
 
     // Initial setup
-    resizeRenderer();
+    resizeRenderer()
+
 });
