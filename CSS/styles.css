@@ -290,18 +290,34 @@ nav .logo-container img {
 #add-to-cart {
   width: 100%;
   padding: 15px;
-  background-color: white;  /* Changed from #000 to transparent */
-  color: black;
+  background-color: black;  /* Changed from #000 to transparent */
+  color: white;
   border: 1px solid #fff;  /* Added white border */
   cursor: pointer;
   margin-bottom: 20px;
   transition: background-color 0.3s, color 0.3s;  /* Added transition for hover effect */
 }
 
+#buy-now {
+    width: 100%;
+    padding: 15px;
+    background-color: black;  /* Changed from #000 to transparent */
+    color: white;
+    border: 1px solid #fff;  /* Added white border */
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background-color 0.3s, color 0.3s;  /* Added transition for hover effect */
+  }
+
 #add-to-cart:hover {
-  background-color: black;  /* White background on hover */
+  background-color: #673CAF;  /* White background on hover */
   color: white;  /* Black text on hover */
 }
+
+#buy-now:hover {
+    background-color: #673CAF;  /* White background on hover */
+    color: white;  /* Black text on hover */
+  }
   
   #product-description {
     font-size: 14px;
@@ -394,36 +410,8 @@ nav .logo-container img {
     }
 }
 
-/* Product Images Section */
-
-.product-images {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
-
-.product-images img {
-    width: 48%;
-    height: auto;
-    margin-bottom: 10px;
-    cursor: pointer;
-    transition: opacity 0.3s ease;
-}
-
-.product-images img:hover {
-    opacity: 0.8;
-}
-
-@media (max-width: 768px) {
-    .product-images img {
-        width: 100%;
-    }
-}
-
-/*Image Viewer Fullscreen*/
-
 /* Update the product images section */
+
 .product-images {
     display: flex;
     flex-direction: column;
@@ -440,57 +428,6 @@ nav .logo-container img {
 
 .product-images img:hover {
     opacity: 0.8;
-}
-
-/* Fullscreen image viewer */
-
-.fullscreen-image-viewer {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.fullscreen-image {
-    max-width: 90%;
-    max-height: 80%;
-    object-fit: contain;
-}
-
-.close-viewer,
-.prev,
-.next {
-    color: white;
-    position: absolute;
-    font-size: 35px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.close-viewer {
-    top: 15px;
-    right: 35px;
-}
-
-.prev,
-.next {
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.prev {
-    left: 15px;
-}
-
-.next {
-    right: 15px;
 }
 
 /* Make product overlay scrollable on mobile */
@@ -534,7 +471,7 @@ nav .logo-container img {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: black;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -551,7 +488,7 @@ nav .logo-container img {
 .next {
     color: white;
     position: absolute;
-    font-size: 35px;
+    font-size: 25px;
     font-weight: bold;
     cursor: pointer;
 }

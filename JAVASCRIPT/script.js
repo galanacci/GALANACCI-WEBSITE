@@ -1,79 +1,3 @@
-// Global variable to track cursor position
-let cursorX = 0;
-
-// Event listener to update cursor position on mouse move
-document.addEventListener('mousemove', (event) => {
-    cursorX = event.clientX;
-});
-
-// Function to animate the split screen effect
-function animate() {
-    const screenWidth = window.innerWidth;
-    const percentage = (cursorX / screenWidth) * 100;
-
-    // Get DOM elements
-    const galanacci = document.getElementById('galanacci');
-    const pog = document.getElementById('pog');
-    const galanacciLogo = document.querySelector('#galanacci-logo img');
-    const pogLogo = document.querySelector('#pog-logo img');
-
-    // Update clip paths based on cursor position
-    galanacci.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0% 100%)`;
-    pog.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
-
-    // Calculate and set logo opacities
-    let galanacciOpacity = 1, pogOpacity = 0;
-
-    if (percentage < 20) {
-        galanacciOpacity = 1;
-        pogOpacity = 0;
-    } else if (percentage > 80) {
-        galanacciOpacity = 0;
-        pogOpacity = 1;
-    } else {
-        galanacciOpacity = 1 - (percentage - 12.5) / 75;
-        pogOpacity = (percentage - 12.5) / 75;
-    }
-
-    galanacciLogo.style.opacity = galanacciOpacity;
-    pogLogo.style.opacity = pogOpacity;
-
-    // Continue animation
-    requestAnimationFrame(animate);
-}
-
-// Start the animation
-requestAnimationFrame(animate);
-
-// Image modal functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById('imageModal');
-    const modalImg = document.getElementById('img01');
-    const images = document.querySelectorAll('.product-image');
-    let currentImageIndex = 0;
-
-    // Open modal on image click
-    images.forEach((image, index) => {
-        image.onclick = function() {
-            modal.style.display = 'block';
-            modalImg.src = this.src;
-            currentImageIndex = index;
-        };
-    });
-
-    // Close modal
-    document.getElementsByClassName('close-modal')[0].onclick = () => modal.style.display = 'none';
-
-    // Navigate between images in modal
-    function showImage(n) {
-        currentImageIndex = (currentImageIndex + n + images.length) % images.length;
-        modalImg.src = images[currentImageIndex].src;
-    }
-
-    document.querySelector('.prev').onclick = () => showImage(-1);
-    document.querySelector('.next').onclick = () => showImage(1);
-});
-
 // 3D Wardrobe functionality
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -122,19 +46,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const productInfo = {
         '/3DM/GLN_DENIM_JACKET.glb': {
-            title: "Product Tite 1",
-            price: "£1,500.00",
-            description: "Product description will be inserted here.",
+            title: "K2G LEATHER JACKET",
+            price: "£2,000.00",
+            description: "This is a 1 of 1 piece which was hand-screenprinted by GALANACCI THE CREATOR. 'K2G,' standing for 'Keys 2 Greatness,' is the brand's emblem and serves as a&nbsp;symbol for greatness. This emblem originates from the original 'Greatness' graphic.",
             images: [
-                "/images/denim_jacket_1.jpg",
-                "/images/denim_jacket_2.jpg",
-                "/images/denim_jacket_3.jpg"
+                "/IMAGES/GALANACCI_COLLECTION/PRODUCT_2/1.png",
+                "/IMAGES/GALANACCI_COLLECTION/PRODUCT_2/2.png",
+                "/IMAGES/GALANACCI_COLLECTION/PRODUCT_2/3.png"
             ]
         },
         '/3DM/GLN_LEATHER_JACKET.glb': {
-            title: "Product Tite 2",
-            price: "£1,500.00",
-            description: "Product description will be inserted here.",
+            title: "K2G CROPPED LEATHER JACKET",
+            price: "£2,500.00",
+            description: "This is a 1 of 1 piece which was hand-screenprinted by GALANACCI THE CREATOR. The 'Core' refers to the combination of the 'Pioneers of Greatness' slogan (front) and the 'Keys 2 Greatness' emblem (back). This is a flagship design for GALANACCI® and it symbolizes the pursuit of greatness.",
             images: [
                 "/IMAGES/GALANACCI_COLLECTION/PRODUCT_3/1.png",
                 "/IMAGES/GALANACCI_COLLECTION/PRODUCT_3/2.png",
@@ -143,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         '/3DM/GLN_LEATHER_JACKET_2.glb': {
             title: "Product Tite 3",
-            price: "£1,500.00",
+            price: "£3,200.00",
             description: "Product description will be inserted here.",
             images: [
                 "/images/leather_jacket_2_1.jpg",
@@ -157,9 +81,9 @@ document.addEventListener('DOMContentLoaded', () => {
             description: "Product description will be inserted here.",
         },
         '/3DM/GLN_LEATHER_JACKET_3.glb': {
-            title: "Product Tite 5",
+            title: "POG DENIM JACKET",
             price: "£1,500.00",
-            description: "Product description will be inserted here.",
+            description: "This is a 1 of 1 piece which was hand-embroidered by GALANACCI THE CREATOR. 'POG,' standing for 'Pioneers of Greatness,' is the brand's slogan and serves as an invitation for you to become a pioneer of greatness. This concept originates from the 'Greatness' poem.",
             images: [
                 "/IMAGES/GALANACCI_COLLECTION/PRODUCT_1/1.png",
                 "/IMAGES/GALANACCI_COLLECTION/PRODUCT_1/2.png",
