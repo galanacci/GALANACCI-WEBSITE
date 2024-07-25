@@ -136,9 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
             price: "£1,500.00",
             description: "Product description will be inserted here.",
             images: [
-                "/images/leather_jacket_1.jpg",
-                "/images/leather_jacket_2.jpg",
-                "/images/leather_jacket_3.jpg"
+                "/IMAGES/GALANACCI_COLLECTION/PRODUCT_3/1.png",
+                "/IMAGES/GALANACCI_COLLECTION/PRODUCT_3/2.png",
+                "/IMAGES/GALANACCI_COLLECTION/PRODUCT_3/3.png"
             ]
         },
         '/3DM/GLN_LEATHER_JACKET_2.glb': {
@@ -306,10 +306,21 @@ document.addEventListener('DOMContentLoaded', () => {
             if (imageContainer) imageContainer.innerHTML = '';
             if (mobileImageContainer) mobileImageContainer.innerHTML = '';
             
-            info.images.forEach(src => {
+            info.images.forEach((src, index) => {
               const img = document.createElement('img');
               img.src = src;
               img.alt = info.title;
+              img.addEventListener('click', (event) => {
+                console.log('Image clicked');
+                event.stopPropagation(); // Prevent event from bubbling up
+                images = info.images.map(src => {
+                    const img = new Image();
+                    img.src = src;
+                    return img;
+                });
+                showImage(index);
+                showViewer();
+              });
               if (imageContainer) imageContainer.appendChild(img.cloneNode(true));
               if (mobileImageContainer) mobileImageContainer.appendChild(img);
             });
@@ -326,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           console.error('No product info found for:', modelPath);
         }
-      }
+    }
 
       function hideOverlay() {
         console.log('Hiding overlay');
@@ -670,6 +681,41 @@ document.addEventListener('DOMContentLoaded', () => {
     
         // Initial state
         updateDragHandleState(false);
+
+            // Add this new code for the image lightbox
+    const fullscreenViewer = document.getElementById('fullscreen-image-viewer');
+    const fullscreenImage = fullscreenViewer.querySelector('.fullscreen-image');
+    const closeViewer = fullscreenViewer.querySelector('.close-viewer');
+    const prevButton = fullscreenViewer.querySelector('.prev');
+    const nextButton = fullscreenViewer.querySelector('.next');
+    
+    let currentImageIndex = 0;
+    let images = [];
+
+    function showImage(index) {
+        fullscreenImage.src = images[index].src;
+        currentImageIndex = index;
+    }
+
+    function showViewer() {
+        fullscreenViewer.style.display = 'flex';
+    }
+
+    function hideViewer() {
+        fullscreenViewer.style.display = 'none';
+    }
+
+    closeViewer.addEventListener('click', hideViewer);
+
+    prevButton.addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+        showImage(currentImageIndex);
+    });
+
+    nextButton.addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+        showImage(currentImageIndex);
+    });
     }
     
     // Call this function when the DOM is loaded
@@ -681,4 +727,48 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial setup
     resizeRenderer()
     
+    // Add this new code for the image lightbox
+    const fullscreenViewer = document.getElementById('fullscreen-image-viewer');
+    console.log('Fullscreen viewer element:', fullscreenViewer);
+    const fullscreenImage = fullscreenViewer.querySelector('.fullscreen-image');
+    const closeViewer = fullscreenViewer.querySelector('.close-viewer');
+    const prevButton = fullscreenViewer.querySelector('.prev');
+    const nextButton = fullscreenViewer.querySelector('.next');
+    
+    let currentImageIndex = 0;
+    let images = [];
+
+    function showImage(index) {
+        fullscreenImage.src = images[index].src;
+        currentImageIndex = index;
+    }
+
+    function showViewer() {
+        console.log('Showing viewer');
+        fullscreenViewer.style.display = 'flex';
+    }
+
+    function hideViewer() {
+        fullscreenViewer.style.display = 'none';
+    }
+
+    closeViewer.addEventListener('click', hideViewer);
+
+    prevButton.addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+        showImage(currentImageIndex);
+    });
+
+    nextButton.addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+        showImage(currentImageIndex);
+    });
+
+    // Test direct click event
+    document.addEventListener('click', function(event) {
+        if (event.target.matches('.product-images img')) {
+            console.log('Direct image click');
+            showViewer();
+        }
+    });
 });

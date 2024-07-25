@@ -337,10 +337,8 @@ nav .logo-container img {
 
 /*Drag Handle For Overlay */
 
-/*Drag Handle For Overlay */
-
 .drag-handle {
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -394,4 +392,185 @@ nav .logo-container img {
     .drag-handle {
         display: flex;
     }
+}
+
+/* Product Images Section */
+
+.product-images {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.product-images img {
+    width: 48%;
+    height: auto;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.product-images img:hover {
+    opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+    .product-images img {
+        width: 100%;
+    }
+}
+
+/*Image Viewer Fullscreen*/
+
+/* Update the product images section */
+.product-images {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.product-images img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.product-images img:hover {
+    opacity: 0.8;
+}
+
+/* Fullscreen image viewer */
+
+.fullscreen-image-viewer {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.fullscreen-image {
+    max-width: 90%;
+    max-height: 80%;
+    object-fit: contain;
+}
+
+.close-viewer,
+.prev,
+.next {
+    color: white;
+    position: absolute;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-viewer {
+    top: 15px;
+    right: 35px;
+}
+
+.prev,
+.next {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.prev {
+    left: 15px;
+}
+
+.next {
+    right: 15px;
+}
+
+/* Make product overlay scrollable on mobile */
+
+@media (max-width: 768px) {
+    #product-overlay {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+@media (max-width: 768px) {
+    #product-overlay {
+        padding-bottom: 80px; /* Add some padding at the bottom for better scrolling */
+    }
+
+    .additional-links a, #add-to-cart, #color-select, #size-select {
+        min-height: 44px; /* Increase touch target size for better interaction */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+#product-overlay {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+#product-overlay::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Opera */
+}
+
+/* Image Lightbox */
+
+.fullscreen-image-viewer {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.fullscreen-image {
+    max-width: 90%;
+    max-height: 80%;
+    object-fit: contain;
+}
+
+.close-viewer,
+.prev,
+.next {
+    color: white;
+    position: absolute;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-viewer {
+    top: 15px;
+    right: 35px;
+}
+
+.prev,
+.next {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.prev {
+    left: 15px;
+}
+
+.next {
+    right: 15px;
 }
