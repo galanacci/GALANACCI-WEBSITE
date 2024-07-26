@@ -1,71 +1,34 @@
+/* Basic Page Setup */
 body, html {
     margin: 0;
     padding: 0;
     height: 100%;
     overflow: hidden;
     font-family: Helvetica, sans-serif;
-    background-color: black; /* Set the background color to black */
+    background-color: black;
 }
 
-/* Navbar */
-
+/* Navbar Styles */
 nav {
-    background-color: transparent; /* Set the background to transparent */
-    position: fixed; /* Fix the position at the top */
+    background-color: transparent;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     display: flex;
-    justify-content: center; /* Center the logo */
+    justify-content: center;
     align-items: center;
     padding-top: 40px;
-    z-index: 10; /* Ensure it stays above other content */
-    transition: opacity 0.3s; /* Smooth transition for hiding/showing */
+    z-index: 10;
+    transition: opacity 0.3s;
 }
 
 nav .logo-container img {
-    height: 40px; /* Default height for desktop */
-    transition: height 0.3s; /* Smooth transition for height change */
+    height: 40px;
+    transition: height 0.3s;
 }
 
-/* Responsive Styles */
-
-/* For tablets and large mobile devices */
-@media (max-width: 1024px) {
-    nav .logo-container img {
-        height: 40px; /* Adjust height for tablets */
-    }
-
-    nav {
-        padding-top: 30px; /* Adjust padding for tablets */
-    }
-}
-
-/* For mobile devices */
-@media (max-width: 768px) {
-    nav .logo-container img {
-        height: 40px; /* Adjust height for mobile devices */
-    }
-
-    nav {
-        padding-top: 20px; /* Adjust padding for mobile devices */
-    }
-}
-
-/* For very small mobile devices */
-@media (max-width: 480px) {
-    nav .logo-container img {
-        height: 30px; /* Adjust height for small mobile devices */
-    }
-
-    nav {
-        padding-top: 10px; /* Adjust padding for small mobile devices */
-    }
-}
-
-
-/* Landing Page Image Properties */
-
+/* Landing Page Image Styles */
 .side {
     position: absolute;
     top: 0;
@@ -82,8 +45,8 @@ nav .logo-container img {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.3); /* 30% opacity black overlay */
-    z-index: 1; /* Ensure it stays above the image but below other content */
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 1;
 }
 
 .side img {
@@ -93,45 +56,23 @@ nav .logo-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    z-index: 0; /* Ensure it stays behind the overlay */
+    z-index: 0;
 }
 
-/* Landing Page Effect */
-
+/* Landing Page Logo Effects */
 .logo-wrapper {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 2; /* Ensure it stays above other content */
-}
-
-#galanacci-logo-wrapper {
-    left: 200px; /* Add padding from the left edge */
-}
-
-#pog-logo-wrapper {
-    right: 200px; /* Add padding from the right edge */
-}
-
-#galanacci {
     z-index: 2;
-    clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
 }
 
-#pog {
-    z-index: 1;
-    clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
-}
+#galanacci-logo-wrapper { left: 200px; }
+#pog-logo-wrapper { right: 200px; }
 
-#pog-background {
-    z-index: 2;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-}
-
-#galanacci-background {
-    z-index: 2;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-}
+#galanacci { clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%); }
+#pog { clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%); }
+#pog-background, #galanacci-background { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
 
 #logo-container {
     position: absolute;
@@ -140,219 +81,161 @@ nav .logo-container img {
     display: flex;
     justify-content: space-between;
     transform: translateY(-50%);
-    z-index: 3; /* Ensure it stays above the other content */
-    padding: 0; /* Reset padding */
+    z-index: 3;
+    padding: 0;
 }
 
-#logo-container a {
-    width: 100%; /* Set a fixed width for the logos */
-}
+#logo-container a { width: 100%; }
 
 #logo-container img {
-    width: 200px; /* Logos fill their container width */
-    height: auto; /* Maintain aspect ratio */
-    cursor: pointer; /* Indicate that the logos are clickable */
-    transition: opacity 0.1s; /* Smooth transition for opacity */
+    width: 200px;
+    height: auto;
+    cursor: pointer;
+    transition: opacity 0.1s;
 }
 
+/* Main Container Styles */
 #container {
     position: relative;
     width: 100%;
     height: 100%;
     padding-top: 50px;
-    overflow-y: auto; /* Enable vertical scrolling */
-    -ms-overflow-style: none;  /* Hide scrollbar for Internet Explorer and Edge */
-    scrollbar-width: none;  /* Hide scrollbar for Firefox */
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
     box-sizing: border-box;
 }
 
-#container::-webkit-scrollbar {
-    display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
-}
+#container::-webkit-scrollbar { display: none; }
 
-/* Product Description Overlay (Product Description) */
-
+/* Product Description Overlay Styles */
 #product-overlay, #image-overlay {
     position: fixed;
     top: 0;
     right: 0;
     width: 33.33%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Background with 50% opacity */
-    backdrop-filter: blur(2px); /* Gaussian blur effect */
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
     color: white;
     transform: translateX(100%);
-    transition: transform 5s ease-in-out, opacity 5s ease-in-out; /* Added opacity transition */
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
     z-index: 1000;
     overflow-y: auto;
     box-sizing: border-box;
-    padding-top: 20px;
-    padding-bottom: 50px;
-    padding-left: 5%;  /* Adjust this value as needed */
-    padding-right: 5%; /* Adjust this value as needed */
-    opacity: 0; /* Initially hidden */
+    padding: 20px 5% 50px;
+    opacity: 0;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
 }
-  
-  #image-overlay {
-    
+
+#image-overlay {
     left: 0;
     width: 33.33%;
     transform: translateX(-100%);
-  }
-  
-  #product-overlay.visible, #image-overlay.visible {
-    transform: translateX(0);
-    opacity: 1; /* Fully visible */
-}
-  
-  @media (max-width: 768px) {
-    #product-overlay {
-      width: 100%;
-      height: 33.33%;
-      bottom: 0;
-      top: auto;
-      transform: translateY(100%);
-    }
-  
-    #product-overlay.visible {
-      transform: translateY(0);
-    }
-  }
-  
-  .product-info {
-    padding-top: 0; /* Reset padding for desktop */
 }
 
-@media (max-width: 768px) {
-    .product-info {
-        padding-top: 60px; /* Add padding for mobile to accommodate drag handle */
-    }
+#product-overlay.visible, #image-overlay.visible {
+    transform: translateX(0);
+    opacity: 1;
 }
-  
-  #product-title {
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+#product-overlay::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+#product-overlay {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* Product Info Styles */
+.product-info { padding-top: 0; }
+
+#product-title {
     font-size: 24px;
     margin-bottom: 5px;
-  }
-  
-  #product-price {
+}
+
+#product-price {
     font-size: 18px;
     margin-bottom: 20px;
-  }
+}
 
-  .selection-container {
+/* Product Selection Styles */
+.selection-container {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     margin-bottom: 15px;
-  }
-  
-  .color-selection, .size-selection {
-    width: 48%; /* Adjust as needed */
-  }
-  
-  #color-select, #size-select {
+}
+
+.color-selection, .size-selection { width: 48%; }
+
+#color-select, #size-select {
     width: 100%;
     padding: 10px;
     margin-top: 5px;
     background-color: transparent;
     color: white;
     border: 1px solid white;
-  }
-  
-  #selected-color {
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  #color-select, #size-select {
     appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
     background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
     background-repeat: no-repeat;
-    background-position-x: 100%;
-    background-position-y: 50%;
-  }
-  
-  .additional-links {
+    background-position: right center;
+}
+
+#selected-color {
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Additional Links Styles */
+.additional-links {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
     color: white;
-  }
-  
-  .additional-links a {
+}
+
+.additional-links a {
     color: #ffffff;
     text-decoration: none;
     font-size: 12px;
-  }
-  
-#add-to-cart {
-  width: 100%;
-  padding: 15px;
-  background-color: black;  /* Changed from #000 to transparent */
-  color: white;
-  border: 1px solid #fff;  /* Added white border */
-  cursor: pointer;
-  margin-bottom: 20px;
-  transition: background-color 0.3s, color 0.3s;  /* Added transition for hover effect */
 }
 
-#buy-now {
+/* Button Styles */
+#add-to-cart, #buy-now {
     width: 100%;
     padding: 15px;
-    background-color: black;  /* Changed from #000 to transparent */
+    background-color: black;
     color: white;
-    border: 1px solid #fff;  /* Added white border */
+    border: 1px solid #fff;
     cursor: pointer;
     margin-bottom: 20px;
-    transition: background-color 0.3s, color 0.3s;  /* Added transition for hover effect */
-  }
-
-#add-to-cart:hover {
-  background-color: #673CAF;  /* White background on hover */
-  color: white;  /* Black text on hover */
+    transition: background-color 0.3s, color 0.3s;
 }
 
-#buy-now:hover {
-    background-color: #673CAF;  /* White background on hover */
-    color: white;  /* Black text on hover */
-  }
-  
-  #product-description {
+#add-to-cart:hover, #buy-now:hover {
+    background-color: #673CAF;
+    color: white;
+}
+
+/* Product Description Styles */
+#product-description {
     font-size: 14px;
     line-height: 1.5;
     margin-bottom: 20px;
-  }
-  
-  .expandable-sections details {
-    margin-bottom: 10px;
-  }
-  
-  .expandable-sections summary {
-    cursor: pointer;
-    font-weight: bold;
-  }
-  
-  .expandable-sections p {
-    padding-left: 20px;
-    font-size: 14px;
-  }
-
-  #product-overlay {
-    transition: height 0.3s ease-out;
-    overflow-y: auto;
 }
 
-@media (max-width: 768px) {
-    #product-overlay {
-        height: 10%; /* Start with a minimal height */
-        min-height: 60px; /* Ensure there's always something visible */
-    }
-}
+/* Expandable Sections Styles */
+.expandable-sections details { margin-bottom: 10px; }
+.expandable-sections summary { cursor: pointer; font-weight: bold; }
+.expandable-sections p { padding-left: 20px; font-size: 14px; }
 
-/*Drag Handle For Overlay */
-
+/* Drag Handle Styles */
 .drag-handle {
     display: none;
     flex-direction: column;
@@ -396,22 +279,9 @@ nav .logo-container img {
     transform: translateX(-50%) rotate(-45deg);
 }
 
-.drag-handle.down .arrow-outline {
-    transform: rotate(180deg);
-}
+.drag-handle.down .arrow-outline { transform: rotate(180deg); }
 
-.product-info {
-    padding-top: 60px; /* Adjust this value to create the desired gap */
-}
-
-@media (max-width: 768px) {
-    .drag-handle {
-        display: flex;
-    }
-}
-
-/* Update the product images section */
-
+/* Product Images Styles */
 .product-images {
     display: flex;
     flex-direction: column;
@@ -426,43 +296,9 @@ nav .logo-container img {
     transition: opacity 0.3s ease;
 }
 
-.product-images img:hover {
-    opacity: 0.8;
-}
+.product-images img:hover { opacity: 0.8; }
 
-/* Make product overlay scrollable on mobile */
-
-@media (max-width: 768px) {
-    #product-overlay {
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-}
-
-@media (max-width: 768px) {
-    #product-overlay {
-        padding-bottom: 80px; /* Add some padding at the bottom for better scrolling */
-    }
-
-    .additional-links a, #add-to-cart, #color-select, #size-select {
-        min-height: 44px; /* Increase touch target size for better interaction */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-}
-
-#product-overlay {
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
-}
-
-#product-overlay::-webkit-scrollbar {
-    display: none; /* For Chrome, Safari, and Opera */
-}
-
-/* Image Lightbox */
-
+/* Image Lightbox Styles */
 .fullscreen-image-viewer {
     display: none;
     position: fixed;
@@ -483,9 +319,7 @@ nav .logo-container img {
     object-fit: contain;
 }
 
-.close-viewer,
-.prev,
-.next {
+.close-viewer, .prev, .next {
     color: white;
     position: absolute;
     font-size: 25px;
@@ -493,21 +327,42 @@ nav .logo-container img {
     cursor: pointer;
 }
 
-.close-viewer {
-    top: 15px;
-    right: 35px;
+.close-viewer { top: 15px; right: 35px; }
+.prev, .next { top: 50%; transform: translateY(-50%); }
+.prev { left: 15px; }
+.next { right: 15px; }
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+    nav .logo-container img { height: 40px; }
+    nav { padding-top: 30px; }
 }
 
-.prev,
-.next {
-    top: 50%;
-    transform: translateY(-50%);
+@media (max-width: 768px) {
+    nav .logo-container img { height: 40px; }
+    nav { padding-top: 20px; }
+    
+    #product-overlay {
+        width: 100%;
+        height: 33.33%;
+        bottom: 0;
+        top: auto;
+        transform: translateY(100%);
+    }
+    
+    #product-overlay.visible { transform: translateY(0); }
+    
+    .product-info { padding-top: 60px; }
+    
+    .drag-handle { display: flex; }
+    
+    #product-overlay {
+        height: 10%;
+        min-height: 60px;
+    }
 }
 
-.prev {
-    left: 15px;
-}
-
-.next {
-    right: 15px;
+@media (max-width: 480px) {
+    nav .logo-container img { height: 30px; }
+    nav { padding-top: 10px; }
 }

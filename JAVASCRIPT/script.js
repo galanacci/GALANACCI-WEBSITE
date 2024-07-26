@@ -79,6 +79,11 @@ document.addEventListener('DOMContentLoaded', () => {
             title: "Product Tite 4",
             price: "£1,500.00",
             description: "Product description will be inserted here.",
+                        images: [
+                "/images/leather_jacket_2_1.jpg",
+                "/images/leather_jacket_2_2.jpg",
+                "/images/leather_jacket_2_3.jpg"
+            ]
         },
         '/3DM/GLN_LEATHER_JACKET_3.glb': {
             title: "POG DENIM JACKET",
@@ -260,6 +265,11 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         } else {
           console.error('No product info found for:', modelPath);
+        }
+
+        if (isMobileDevice()) {
+            document.getElementById('product-overlay').style.overflowY = 'auto';
+            document.getElementById('product-overlay').style.WebkitOverflowScrolling = 'touch';
         }
     }
 
