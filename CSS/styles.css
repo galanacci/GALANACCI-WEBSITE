@@ -354,7 +354,10 @@ nav .logo-container img {
     
     .product-info { padding-top: 60px; }
     
-    .drag-handle { display: flex; }
+    .drag-handle { 
+        display: flex;
+        height: 30px;
+    }
     
     #product-overlay {
         height: 10%;

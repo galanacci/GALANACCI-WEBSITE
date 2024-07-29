@@ -529,7 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: false });
 
     window.addEventListener('mousedown', onClick);
-    window.addEventListener('touchstart', onClick, { passive: false });
+    window.addEventListener('touchstart', onClick);
 
     function resizeRenderer() {
         const width = window.innerWidth;
