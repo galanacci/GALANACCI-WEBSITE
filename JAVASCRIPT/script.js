@@ -152,18 +152,13 @@ document.addEventListener('DOMContentLoaded', () => {
         y: 0
     };
     let isTransitioning = false;
-
-    let touchStartX, touchStartY;
     let rotationSpeed = 0.005;
     let rotationMomentum = 0;
     let lastTouchTime = 0;
     const maxRotationSpeed = 0.1;
-
-    let currentZoom = 1;
-    const maxZoom = 1.3;
+    const maxZoom = 1.4;
     const minZoom = 1;
     const zoomSpeed = 0.005;
-    let initialCameraDistance = 7;
 
     function updateModelRotation() {
         if (selectedModel && selectedModel.userData.isSelected) {
@@ -250,6 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showImage(index);
                 showViewer();
               });
+              
               if (imageContainer) imageContainer.appendChild(img.cloneNode(true));
               if (mobileImageContainer) mobileImageContainer.appendChild(img);
             });
@@ -542,8 +538,6 @@ document.addEventListener('DOMContentLoaded', () => {
         adjustCameraAndModels();
     }
 
-    window.addEventListener('resize', resizeRenderer);
-
     // Add event listener for the "Add to Cart" button
     document.getElementById('add-to-cart').addEventListener('click', () => {
         const size = document.getElementById('size-select').value;
@@ -615,45 +609,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
         // Initial state
         updateDragHandleState(false);
-
-            // Add this new code for the image lightbox
-    const fullscreenViewer = document.getElementById('fullscreen-image-viewer');
-    const fullscreenImage = fullscreenViewer.querySelector('.fullscreen-image');
-    const closeViewer = fullscreenViewer.querySelector('.close-viewer');
-    const prevButton = fullscreenViewer.querySelector('.prev');
-    const nextButton = fullscreenViewer.querySelector('.next');
-    
-    let currentImageIndex = 0;
-    let images = [];
-
-    function showImage(index) {
-        fullscreenImage.src = images[index].src;
-        currentImageIndex = index;
     }
-
-    function showViewer() {
-        fullscreenViewer.style.display = 'flex';
-    }
-
-    function hideViewer() {
-        fullscreenViewer.style.display = 'none';
-    }
-
-    closeViewer.addEventListener('click', hideViewer);
-
-    prevButton.addEventListener('click', () => {
-        currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-        showImage(currentImageIndex);
-    });
-
-    nextButton.addEventListener('click', () => {
-        currentImageIndex = (currentImageIndex + 1) % images.length;
-        showImage(currentImageIndex);
-    });
-    }
-    
-    // Call this function when the DOM is loaded
-    document.addEventListener('DOMContentLoaded', initOverlayDrag);
 
     // Initialize overlay drag functionality
     initOverlayDrag();
@@ -696,14 +652,6 @@ document.addEventListener('DOMContentLoaded', () => {
     nextButton.addEventListener('click', () => {
         currentImageIndex = (currentImageIndex + 1) % images.length;
         showImage(currentImageIndex);
-    });
-
-    // Test direct click event
-    document.addEventListener('click', function(event) {
-        if (event.target.matches('.product-images img')) {
-            console.log('Direct image click');
-            showViewer();
-        }
     });
     
 });
