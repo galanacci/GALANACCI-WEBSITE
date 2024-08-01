@@ -115,7 +115,7 @@ nav .logo-container img {
     right: 0;
     width: 33.33%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(2px);
     color: white;
     transform: translateX(100%);
@@ -169,10 +169,19 @@ nav .logo-container img {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
-.color-selection, .size-selection { width: 48%; }
+.color-selection, .size-selection { 
+    width: 48%; 
+}
+
+#color-select:hover, #size-select:hover {
+    background: #673CAF;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right center;
+}
 
 #color-select, #size-select {
     width: 100%;
@@ -185,6 +194,8 @@ nav .logo-container img {
     background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
     background-repeat: no-repeat;
     background-position: right center;
+    transition: background-color 0.3s, color 0.3s;
+    z-index: 1000;
 }
 
 #selected-color {
