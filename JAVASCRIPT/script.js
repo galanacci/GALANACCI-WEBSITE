@@ -34,12 +34,12 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const modelPositions = [
-        [-4, -2, 0],
-        [0, -2, 0],
-        [4, -2, 0],
-        [4, -5.5, 0],
-        [0, -6, 0],
-        [-4, -6, 0]
+        [-8, -4, 0],
+        [-5, -4.5, 0],
+        [-2, -4.25, 0],
+        [1, -3.7, 0],
+        [4, -4.25, 0],
+        [8, -4, 0]
     ];
 
     const defaultScale = 4;
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ]
         },
         '/3DM/GLN_LEATHER_JACKET_2.glb': {
-            title: "Product Tite 3",
+            title: "Product Title 3",
             price: "£3,200.00",
             description: "Product description will be inserted here.",
             images: [
@@ -76,10 +76,10 @@ document.addEventListener('DOMContentLoaded', () => {
             ]
         },
         '/3DM/GLN_LEATHER_VEST.glb': {
-            title: "Product Tite 4",
+            title: "Product Title 4",
             price: "£1,500.00",
             description: "Product description will be inserted here.",
-                        images: [
+            images: [
                 "/images/leather_jacket_2_1.jpg",
                 "/images/leather_jacket_2_2.jpg",
                 "/images/leather_jacket_2_3.jpg"
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ]
         },
         '/3DM/GLN_LEATHER_JACKET_4.glb': {
-            title: "Product Tite 6",
+            title: "Product Title 6",
             price: "£1,500.00",
             description: "Product description will be inserted here.",
             images: [
@@ -125,23 +125,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     camera.position.set(0, -2, 7);
 
+    const cameraSlider = document.getElementById('camera-slider');
+    let initialCameraPosition = new THREE.Vector3(0, -2, 7);
+    let mobileZoomFactor = 0.7;
+
+    function updateCameraPosition() {
+        if (selectedModel && selectedModel.userData.isSelected) return;
+        
+        const sliderValue = parseFloat(cameraSlider.value);
+        camera.position.x = initialCameraPosition.x + sliderValue;
+        camera.lookAt(new THREE.Vector3(sliderValue, -2, 0));
+    }
+
+    cameraSlider.addEventListener('input', updateCameraPosition);
+
     function adjustCameraAndModels() {
         const aspect = window.innerWidth / window.innerHeight;
-
+    
         if (aspect < 1) {
             camera.fov = 100;
             models.forEach(model => {
                 const scale = model.userData.defaultScale * 0.75;
                 model.scale.set(scale, scale, scale);
             });
+            camera.position.z = 7 * mobileZoomFactor;
         } else {
             camera.fov = 75;
             models.forEach(model => {
                 const scale = model.userData.defaultScale;
                 model.scale.set(scale, scale, scale);
             });
+            camera.position.z = 7;
         }
-
+    
         camera.updateProjectionMatrix();
     }
 
@@ -198,6 +214,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (selectedModel.rotation.y < 0) {
                 selectedModel.rotation.y += 2 * Math.PI;
             }
+        } else {
+            updateCameraPosition();
         }
         TWEEN.update();
         renderer.render(scene, camera);
@@ -273,14 +291,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-      function hideOverlay() {
+    function hideOverlay() {
         console.log('Hiding overlay');
         document.getElementById('product-overlay').classList.remove('visible');
         document.getElementById('image-overlay').classList.remove('visible');
         if (isMobileDevice()) {
           document.getElementById('product-overlay').style.height = '33.33%';
         }
-      }
+    }
 
     function onClick(event) {
         if (event.target.tagName === 'SELECT') return;
@@ -318,21 +336,24 @@ document.addEventListener('DOMContentLoaded', () => {
             const center = boundingBox.getCenter(new THREE.Vector3());
             const size = boundingBox.getSize(new THREE.Vector3());
             const distance = size.length() * 0.75;
-
+            const isMobile = window.innerWidth <= 768;
+            const zoomFactor = isMobile ? mobileZoomFactor : 1;
+            
             new TWEEN.Tween(camera.position)
-                .to({
-                    x: center.x,
-                    y: center.y,
-                    z: center.z + distance
-                }, 1000)
-                .easing(TWEEN.Easing.Quadratic.Out)
-                .onComplete(() => {
-                    isTransitioning = false;
-                    selectedModel.userData.isSelected = true;
-                    currentZoom = 1;
-                    initialCameraDistance = distance;
-                })
-                .start();
+            .to({
+                x: center.x,
+                y: center.y,
+                z: (center.z + distance) * zoomFactor
+            }, 1000)
+            .easing(TWEEN.Easing.Quadratic.Out)
+            .onComplete(() => {
+                isTransitioning = false;
+                selectedModel.userData.isSelected = true;
+                currentZoom = 1;
+                initialCameraDistance = distance * zoomFactor;
+                cameraSlider.value = "0"; // Reset slider when model is selected
+            })
+            .start();
 
             spotLight.position.set(center.x, center.y, center.z + distance);
             spotLightTarget.position.copy(center);
@@ -353,7 +374,11 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (selectedModel) {
             isTransitioning = true;
             new TWEEN.Tween(camera.position)
-                .to({ x: 0, y: -2, z: 7 }, 1000)
+                .to({ 
+                    x: initialCameraPosition.x, 
+                    y: initialCameraPosition.y, 
+                    z: initialCameraPosition.z
+                }, 1000)
                 .easing(TWEEN.Easing.Quadratic.Out)
                 .onComplete(() => {
                     isTransitioning = false;
@@ -361,6 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     selectedModel = null;
                     currentZoom = 1;
                     adjustCameraAndModels();
+                    updateCameraPosition(); // Update camera position based on slider
                 })
                 .start();
 
@@ -539,8 +565,24 @@ document.addEventListener('DOMContentLoaded', () => {
         renderer.setSize(width, height);
         camera.aspect = width / height;
         
+        // Update initial camera position and slider range for mobile
+        if (width <= 768) {
+            initialCameraPosition.set(0, -2, 7 * mobileZoomFactor);
+            camera.position.copy(initialCameraPosition);
+            cameraSlider.min = "-15";
+            cameraSlider.max = "15";
+        } else {
+            initialCameraPosition.set(0, -2, 7);
+            camera.position.copy(initialCameraPosition);
+            cameraSlider.min = "-10";
+            cameraSlider.max = "10";
+        }
+        
         camera.updateProjectionMatrix();
         adjustCameraAndModels();
+        
+        cameraSlider.value = "0";
+        updateCameraPosition();
     }
 
     window.addEventListener('resize', resizeRenderer);
@@ -551,7 +593,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const color = document.getElementById('color-select').value;
         const title = document.getElementById('product-title').textContent;
         alert(`Added ${title} (Size: ${size.toUpperCase()}, Color: ${color}) to cart!`);
-      });
+    });
 
     // Overlay drag functionality
     function initOverlayDrag() {
@@ -616,45 +658,13 @@ document.addEventListener('DOMContentLoaded', () => {
     
         // Initial state
         updateDragHandleState(false);
-
-            // Add this new code for the image lightbox
-    const fullscreenViewer = document.getElementById('fullscreen-image-viewer');
-    const fullscreenImage = fullscreenViewer.querySelector('.fullscreen-image');
-    const closeViewer = fullscreenViewer.querySelector('.close-viewer');
-    const prevButton = fullscreenViewer.querySelector('.prev');
-    const nextButton = fullscreenViewer.querySelector('.next');
-
-    function showImage(index) {
-        fullscreenImage.src = images[index].src;
-        currentImageIndex = index;
-    }
-
-    function showViewer() {
-        fullscreenViewer.style.display = 'flex';
-    }
-
-    function hideViewer() {
-        fullscreenViewer.style.display = 'none';
-    }
-
-    closeViewer.addEventListener('click', hideViewer);
-
-    prevButton.addEventListener('click', () => {
-        currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-        showImage(currentImageIndex);
-    });
-
-    nextButton.addEventListener('click', () => {
-        currentImageIndex = (currentImageIndex + 1) % images.length;
-        showImage(currentImageIndex);
-    });
     }
 
     // Initialize overlay drag functionality
     initOverlayDrag();
 
     // Initial setup
-    resizeRenderer()
+    resizeRenderer();
     
     // Add this new code for the image lightbox
     const fullscreenViewer = document.getElementById('fullscreen-image-viewer');
