@@ -588,11 +588,11 @@ document.addEventListener('DOMContentLoaded', () => {
         camera.position.copy(initialCameraPosition);
         
         if (width <= 768) {
-            cameraSlider.min = "-15";
-            cameraSlider.max = "15";
+            cameraSlider.min = "-8";
+            cameraSlider.max = "7";
         } else {
-            cameraSlider.min = "-10";
-            cameraSlider.max = "10";
+            cameraSlider.min = "-8";
+            cameraSlider.max = "7";
         }
         
         camera.updateProjectionMatrix();
