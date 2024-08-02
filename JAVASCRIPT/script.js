@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function animate() {
         requestAnimationFrame(animate);
         models.forEach(model => {
-            if (!model.userData.isSelected) {
+            if (!model.userData.isSelected && model.userData.isRotating) {
                 model.rotation.y += 0.005;
             }
         });
@@ -373,47 +373,58 @@ document.addEventListener('DOMContentLoaded', () => {
     
         } else if (selectedModel) {
             isTransitioning = true;
+            
+            // Store the current rotation of the selected model
+            const currentRotation = selectedModel.rotation.y;
+            
             new TWEEN.Tween(camera.position)
                 .to({ 
                     x: initialCameraPosition.x, 
                     y: initialCameraPosition.y, 
                     z: initialCameraPosition.z
-                }, 1000)
-                .easing(TWEEN.Easing.Quadratic.InOut)
+                }, 1500) // Increased duration for smoother transition
+                .easing(TWEEN.Easing.Cubic.InOut) // Changed easing function
                 .start();
-    
-            new TWEEN.Tween(camera.lookAt)
-                .to({ x: 0, y: -2, z: 0 }, 1000)
-                .easing(TWEEN.Easing.Quadratic.InOut)
+        
+            new TWEEN.Tween(camera.rotation)
+                .to({ x: 0, y: 0, z: 0 }, 1500)
+                .easing(TWEEN.Easing.Cubic.InOut)
                 .start();
-    
-            new TWEEN.Tween(camera.position)
-                .to({ 
-                    x: initialCameraPosition.x, 
-                    y: initialCameraPosition.y, 
-                    z: initialCameraPosition.z
-                }, 1000)
-                .easing(TWEEN.Easing.Quadratic.InOut)
+        
+            new TWEEN.Tween(spotLight)
+                .to({ intensity: 0 }, 1500)
+                .easing(TWEEN.Easing.Cubic.InOut)
+                .start();
+        
+            new TWEEN.Tween(ambientLight)
+                .to({ intensity: 8 }, 1500)
+                .easing(TWEEN.Easing.Cubic.InOut)
+                .start();
+        
+            // Gradually resume rotation for all models
+            models.forEach(model => {
+                new TWEEN.Tween(model.rotation)
+                    .to({ y: currentRotation }, 1500)
+                    .easing(TWEEN.Easing.Cubic.InOut)
+                    .onComplete(() => {
+                        model.userData.isRotating = true;
+                    })
+                    .start();
+            });
+        
+            new TWEEN.Tween({})
+                .to({}, 1500)
+                .easing(TWEEN.Easing.Cubic.InOut)
                 .onComplete(() => {
                     isTransitioning = false;
                     selectedModel.userData.isSelected = false;
                     selectedModel = null;
                     currentZoom = 1;
                     adjustCameraAndModels();
-                    updateCameraPosition(); // Update camera position based on slider
+                    updateCameraPosition();
                 })
                 .start();
-    
-            new TWEEN.Tween(spotLight)
-                .to({ intensity: 0 }, 1000)
-                .easing(TWEEN.Easing.Quadratic.InOut)
-                .start();
-    
-            new TWEEN.Tween(ambientLight)
-                .to({ intensity: 8 }, 1000)
-                .easing(TWEEN.Easing.Quadratic.InOut)
-                .start();
-    
+        
             hideOverlay();
         }
     }
