@@ -386,7 +386,7 @@ nav .logo-container img {
 
 #camera-slider-container {
     position: fixed;
-    bottom: 20px;
+    bottom: 50px;
     left: 0;
     right: 0;
     text-align: center;
@@ -413,16 +413,16 @@ nav .logo-container img {
   #camera-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     background: #673CAF;
     cursor: pointer;
     border-radius: 50%;
   }
   
   #camera-slider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     background: #673CAF;
     cursor: pointer;
     border-radius: 50%;

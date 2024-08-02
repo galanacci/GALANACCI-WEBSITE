@@ -34,12 +34,12 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const modelPositions = [
-        [-8, -4, 0],
-        [-5, -4.5, 0],
-        [-2, -4.25, 0],
-        [1, -3.7, 0],
-        [4, -4.25, 0],
-        [8, -4, 0]
+        [-8, -3.5, 0],
+        [-5, -3.8, 0],
+        [-2, -3.5, 0],
+        [1, -3, 0],
+        [4, -3.5, 0],
+        [7, -3.5, 0]
     ];
 
     const defaultScale = 4;
@@ -145,10 +145,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (aspect < 1) {
             camera.fov = 100;
             models.forEach(model => {
-                const scale = model.userData.defaultScale * 0.75;
+                const scale = model.userData.defaultScale * 1;
                 model.scale.set(scale, scale, scale);
             });
-            camera.position.z = 7 * mobileZoomFactor;
+            camera.position.z = 4 * mobileZoomFactor;
         } else {
             camera.fov = 75;
             models.forEach(model => {
@@ -304,34 +304,34 @@ document.addEventListener('DOMContentLoaded', () => {
         if (event.target.tagName === 'SELECT') return;
         console.log('Click event triggered');
         event.preventDefault();
-
+    
         if (isTransitioning) return;
-
+    
         const clientX = event.clientX || (event.touches && event.touches[0].clientX);
         const clientY = event.clientY || (event.touches && event.touches[0].clientY);
-
+    
         if (isPointInOverlay(clientX, clientY)) return;
-
+    
         const mouse = new THREE.Vector2(
             (clientX / window.innerWidth) * 2 - 1,
             -(clientY / window.innerHeight) * 2 + 1
         );
-
+    
         const raycaster = new THREE.Raycaster();
         raycaster.setFromCamera(mouse, camera);
-
+    
         const intersects = raycaster.intersectObjects(models, true);
-
+    
         if (intersects.length > 0) {
             const clickedModel = intersects[0].object.parent;
-
+    
             if (selectedModel && selectedModel !== clickedModel) {
                 selectedModel.userData.isSelected = false;
             }
-
+    
             selectedModel = clickedModel;
             isTransitioning = true;
-
+    
             const boundingBox = new THREE.Box3().setFromObject(clickedModel);
             const center = boundingBox.getCenter(new THREE.Vector3());
             const size = boundingBox.getSize(new THREE.Vector3());
@@ -345,7 +345,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 y: center.y,
                 z: (center.z + distance) * zoomFactor
             }, 1000)
-            .easing(TWEEN.Easing.Quadratic.Out)
+            .easing(TWEEN.Easing.Quadratic.InOut)
             .onComplete(() => {
                 isTransitioning = false;
                 selectedModel.userData.isSelected = true;
@@ -354,23 +354,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 cameraSlider.value = "0"; // Reset slider when model is selected
             })
             .start();
-
+    
             spotLight.position.set(center.x, center.y, center.z + distance);
             spotLightTarget.position.copy(center);
-
+    
             new TWEEN.Tween(spotLight)
                 .to({ intensity: 5 }, 1000)
-                .easing(TWEEN.Easing.Quadratic.Out)
+                .easing(TWEEN.Easing.Quadratic.InOut)
                 .start();
-
+    
             new TWEEN.Tween(ambientLight)
                 .to({ intensity: 0 }, 1000)
-                .easing(TWEEN.Easing.Quadratic.Out)
+                .easing(TWEEN.Easing.Quadratic.InOut)
                 .start();
-
+    
             const modelPath = modelPaths[models.indexOf(clickedModel)];
             showOverlay(modelPath);
-
+    
         } else if (selectedModel) {
             isTransitioning = true;
             new TWEEN.Tween(camera.position)
@@ -379,7 +379,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     y: initialCameraPosition.y, 
                     z: initialCameraPosition.z
                 }, 1000)
-                .easing(TWEEN.Easing.Quadratic.Out)
+                .easing(TWEEN.Easing.Quadratic.InOut)
+                .start();
+    
+            new TWEEN.Tween(camera.lookAt)
+                .to({ x: 0, y: -2, z: 0 }, 1000)
+                .easing(TWEEN.Easing.Quadratic.InOut)
+                .start();
+    
+            new TWEEN.Tween(camera.position)
+                .to({ 
+                    x: initialCameraPosition.x, 
+                    y: initialCameraPosition.y, 
+                    z: initialCameraPosition.z
+                }, 1000)
+                .easing(TWEEN.Easing.Quadratic.InOut)
                 .onComplete(() => {
                     isTransitioning = false;
                     selectedModel.userData.isSelected = false;
@@ -389,17 +403,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     updateCameraPosition(); // Update camera position based on slider
                 })
                 .start();
-
+    
             new TWEEN.Tween(spotLight)
                 .to({ intensity: 0 }, 1000)
-                .easing(TWEEN.Easing.Quadratic.Out)
+                .easing(TWEEN.Easing.Quadratic.InOut)
                 .start();
-
+    
             new TWEEN.Tween(ambientLight)
                 .to({ intensity: 8 }, 1000)
-                .easing(TWEEN.Easing.Quadratic.Out)
+                .easing(TWEEN.Easing.Quadratic.InOut)
                 .start();
-
+    
             hideOverlay();
         }
     }
@@ -568,12 +582,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update initial camera position and slider range for mobile
         if (width <= 768) {
             initialCameraPosition.set(0, -2, 7 * mobileZoomFactor);
-            camera.position.copy(initialCameraPosition);
+        } else {
+            initialCameraPosition.set(0, -2, 7);
+        }
+        camera.position.copy(initialCameraPosition);
+        
+        if (width <= 768) {
             cameraSlider.min = "-15";
             cameraSlider.max = "15";
         } else {
-            initialCameraPosition.set(0, -2, 7);
-            camera.position.copy(initialCameraPosition);
             cameraSlider.min = "-10";
             cameraSlider.max = "10";
         }
